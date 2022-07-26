@@ -65,6 +65,18 @@ class Post {
       throw { success: false, msg: err.msg };
     }
   }
+
+  async updatePost() {
+    try {
+      const updateResult = await PostStorage.updatePost(this.body);
+
+      return updateResult.affectedRows
+        ? { success: true, msg: "게시물이 수정되었습니다." }
+        : { success: false, msg: "게시물이 수정되지 않았습니다" };
+    } catch (err) {
+      throw { success: false, msg: err.msg };
+    }
+  }
 }
 
 module.exports = Post;

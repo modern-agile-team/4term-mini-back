@@ -46,6 +46,18 @@ class PostStorage {
       throw { success: false, msg: err };
     }
   }
+
+  static async updatePost({ postNo, content }) {
+    try {
+      const qurey =
+        "UPDATE posts SET content = ?, updated_date = NOW() WHERE no = ?;";
+      const response = await db.query(qurey, [content, postNo]);
+
+      return response[0];
+    } catch (err) {
+      throw { success: false, msg: err };
+    }
+  }
 }
 
 module.exports = PostStorage;

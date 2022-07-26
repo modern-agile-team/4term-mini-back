@@ -5,7 +5,7 @@ const router = express.Router();
 const postCtrl = require("./post.Ctrl");
 
 router.post("/", postCtrl.process.createPost);
-// router.patch("/", postCtrl.process.updatePost);
+router.patch("/", postCtrl.process.updatePost);
 router.get("/", postCtrl.process.readAllPosts); //전체 게시물 가져오기
 
 // router.get("/:postNo", postCtrl.process.readPost);
