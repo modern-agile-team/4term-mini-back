@@ -32,6 +32,25 @@ class Comment {
       throw { success: false, msg: err.msg };
     }
   }
+
+  async updateComment() {
+    try {
+      const response = await CommentStorage.updateComment(this.body);
+      if (response.affectedRows === 1) {
+        return {
+          success: true,
+          msg: "댓글이 수정되었습니다",
+        };
+      } else {
+        return {
+          success: false,
+          msg: "댓글이 수정되지 않았습니다",
+        };
+      }
+    } catch (err) {
+      throw { success: false, msg: err.msg };
+    }
+  }
 }
 
 module.exports = Comment;
