@@ -77,6 +77,20 @@ class Post {
       throw { success: false, msg: err.msg };
     }
   }
+
+  async readOnePost() {
+    try {
+      let particularPost = await PostStorage.getOnePost(this.params.postNo);
+      if (particularPost.length === 0) {
+        return { success: false, msg: "존재하지 않는 post입니다." };
+      }
+      particularPost[0].images = particularPost[0].images.split(",");
+
+      return particularPost[0];
+    } catch (err) {
+      throw { success: false, msg: err.msg };
+    }
+  }
 }
 
 module.exports = Post;

@@ -58,6 +58,22 @@ class PostStorage {
       throw { success: false, msg: err };
     }
   }
+
+  static async getOnePost(postNo) {
+    try {
+      const query = `SELECT posts.content, 
+          IF(posts.created_date && posts.updated_date, posts.updated_date, posts.created_date) AS date,
+          GROUP_CONCAT(images.image_url) AS images 
+          FROM posts LEFT JOIN images ON images.post_no = posts.no 
+          WHERE posts.no = ?
+          GROUP BY posts.no;`;
+      const response = await db.query(query, [postNo]);
+
+      return response[0];
+    } catch (err) {
+      throw { success: false, msg: err };
+    }
+  }
 }
 
 module.exports = PostStorage;
