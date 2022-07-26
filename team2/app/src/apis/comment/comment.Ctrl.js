@@ -24,6 +24,16 @@ const process = {
       throw res.status(500).json(err);
     }
   },
+
+  readComments: async (req, res) => {
+    try {
+      const comment = new Comment(req);
+      const response = await comment.getComments();
+      return res.status(200).json(response);
+    } catch (err) {
+      throw res.status(500).json(err);
+    }
+  },
 };
 
 module.exports = {

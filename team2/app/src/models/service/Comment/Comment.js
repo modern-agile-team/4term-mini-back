@@ -51,6 +51,18 @@ class Comment {
       throw { success: false, msg: err.msg };
     }
   }
+
+  async getComments() {
+    try {
+      const commentsInfo = await CommentStorage.readComments(
+        this.params.postNo
+      );
+
+      return commentsInfo;
+    } catch (err) {
+      throw { success: false, msg: err.msg };
+    }
+  }
 }
 
 module.exports = Comment;
