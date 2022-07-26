@@ -63,6 +63,25 @@ class Comment {
       throw { success: false, msg: err.msg };
     }
   }
+
+  async deleteComment() {
+    try {
+      const response = await CommentStorage.removeComment(this.params);
+      if (response.affectedRows === 1) {
+        return {
+          success: true,
+          msg: "댓글이 삭제되었습니다",
+        };
+      } else {
+        return {
+          success: false,
+          msg: "댓글이 삭제되지 않았습니다",
+        };
+      }
+    } catch (err) {
+      throw { success: false, msg: err.msg };
+    }
+  }
 }
 
 module.exports = Comment;

@@ -37,5 +37,16 @@ class CommentStorage {
       throw { success: false, msg: err };
     }
   }
+
+  static async removeComment({ commentNo }) {
+    try {
+      const query = "DELETE FROM comments WHERE no =?;";
+      const response = await db.query(query, [commentNo]);
+
+      return response[0];
+    } catch (err) {
+      throw { success: false, msg: err };
+    }
+  }
 }
 module.exports = CommentStorage;
