@@ -53,6 +53,16 @@ const process = {
       throw res.status(500).json(err);
     }
   },
+
+  readMainPosts: async (req, res) => {
+    try {
+      const post = new Post(req);
+      const response = await post.readProfilePosts();
+      return res.status(200).json(response);
+    } catch (err) {
+      throw res.status(500).json(err);
+    }
+  },
 };
 
 module.exports = {

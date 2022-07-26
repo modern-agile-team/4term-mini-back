@@ -103,6 +103,18 @@ class Post {
       throw { success: false, msg: err.msg };
     }
   }
+
+  async readProfilePosts() {
+    try {
+      const profilePostInfo = await PostStorage.getProfilePosts(
+        this.params.userNo
+      );
+
+      return profilePostInfo;
+    } catch (err) {
+      return { success: false, msg: err.msg };
+    }
+  }
 }
 
 module.exports = Post;

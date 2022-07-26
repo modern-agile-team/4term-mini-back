@@ -85,6 +85,19 @@ class PostStorage {
       throw { success: false, msg: err };
     }
   }
+
+  static async getProfilePosts(userNo) {
+    try {
+      const qurey = `SELECT posts.no AS postNo,images.image_url AS firstImage,
+            IF(posts.created_date && posts.updated_date, posts.updated_date, posts.created_date) AS date
+            FROM images LEFT JOIN posts ON images.post_no = posts.no LEFT JOIN users ON(posts.user_no = users.no) WHERE posts.user_no =? GROUP BY posts.no; `;
+      const response = await db.query(qurey, [userNo]);
+
+      return response[0];
+    } catch (err) {
+      throw { success: false, msg: err };
+    }
+  }
 }
 
 module.exports = PostStorage;
