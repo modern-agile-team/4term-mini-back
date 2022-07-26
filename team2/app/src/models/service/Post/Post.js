@@ -91,6 +91,18 @@ class Post {
       throw { success: false, msg: err.msg };
     }
   }
+
+  async deletePost() {
+    try {
+      const deleteResult = await PostStorage.deletePost(this.params.postNo);
+
+      return deleteResult.affectedRows
+        ? { success: true, msg: "게시물이 삭제되었습니다." }
+        : { success: false, msg: "게시물이 삭제되지 않았습니다" };
+    } catch (err) {
+      throw { success: false, msg: err.msg };
+    }
+  }
 }
 
 module.exports = Post;

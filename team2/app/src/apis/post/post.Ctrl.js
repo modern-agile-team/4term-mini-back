@@ -43,6 +43,16 @@ const process = {
       throw res.status(500).json(err);
     }
   },
+
+  deletePost: async (req, res) => {
+    try {
+      const post = new Post(req);
+      const response = await post.deletePost();
+      return res.status(200).json(response);
+    } catch (err) {
+      throw res.status(500).json(err);
+    }
+  },
 };
 
 module.exports = {

@@ -74,6 +74,17 @@ class PostStorage {
       throw { success: false, msg: err };
     }
   }
+
+  static async deletePost(postNo) {
+    try {
+      const query = "DELETE FROM posts WHERE no =?;";
+      const response = await db.query(query, postNo);
+
+      return response[0];
+    } catch (err) {
+      throw { success: false, msg: err };
+    }
+  }
 }
 
 module.exports = PostStorage;
