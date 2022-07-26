@@ -19,6 +19,33 @@ class PostStorage {
       throw { success: false, msg: err };
     }
   }
+
+  static async addNewPost({ userNo, content }) {
+    try {
+      const query = `INSERT INTO posts(user_no, content) VALUES(${userNo}, "${content}");`;
+      const response = await db.query(query);
+
+      return response[0];
+    } catch (err) {
+      throw { success: false, msg: err };
+    }
+  }
+
+  static async addImages(images, postNo) {
+    try {
+      let query = "";
+      images.forEach((imageUrl, index) => {
+        query += `INSERT INTO images(image_url,post_no,order_no) VALUES("${imageUrl}",${postNo},${
+          index + 1
+        });`;
+      });
+      const response = await db.query(query);
+
+      return response[0];
+    } catch (err) {
+      throw { success: false, msg: err };
+    }
+  }
 }
 
 module.exports = PostStorage;
