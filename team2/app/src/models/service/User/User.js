@@ -15,11 +15,9 @@ class User {
 
       if (!test.success) {
         const userInfo = await UserStorage.register(client);
-
         if (!userInfo) {
           return { success: false, msg: "회원가입 실패" };
         }
-
         return { success: true, msg: "회원가입 성공" };
       }
       return test;

@@ -8,6 +8,7 @@ class UserStorage {
     try {
       const query = "SELECT email FROM user WHERE email = (?);";
       const isCheck = await db.query(query, email);
+      console.log(isCheck);
       if (isCheck[0].length === 0) {
         return { success: false, msg: "회원이 아닙니다." };
       }
@@ -19,6 +20,22 @@ class UserStorage {
     } catch (err) {
       throw {
         msg: `${err}: 로그인 에러`,
+      };
+    }
+  }
+
+  static async register(client) {
+    //회원 가입 name, email, profile, gender
+    try {
+      console.log(client);
+      const { nickname, profile_image_url, email, gender } = client;
+      const query = `INSERT INTO user(name, email, profile_image, gender) VALUES(?, ?, ?, ?);`;
+      const test = await db.query(query, [nickname, email, profile_image_url, gender]);
+      return test[0].affectedRows;
+      // }
+    } catch (err) {
+      throw {
+        msg: `${err}: 회원가입 에러입니다.`,
       };
     }
   }
