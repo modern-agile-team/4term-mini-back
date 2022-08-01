@@ -31,11 +31,35 @@ class UserStorage {
       const { nickname, profile_image_url, email, gender } = client;
       const query = `INSERT INTO user(name, email, profile_image, gender) VALUES(?, ?, ?, ?);`;
       const test = await db.query(query, [nickname, email, profile_image_url, gender]);
+
       return test[0].affectedRows;
       // }
     } catch (err) {
       throw {
         msg: `${err}: 회원가입 에러입니다.`,
+      };
+    }
+  }
+
+  static async updateUserInfo(client, userNo) {
+    //유저정보 업데이트
+    try {
+      const { nickname, name, website, phone, gender, profile_image } = client;
+      const query = `UPDATE user SET nickname = ?, name = ?, website = ?, phone = ?, gender = ?, profile_image = ? where no = ?;`;
+      const updateUserInfo = await db.query(query, [
+        nickname,
+        name,
+        website,
+        phone,
+        gender,
+        profile_image,
+        userNo,
+      ]);
+
+      return updateUserInfo;
+    } catch (err) {
+      throw {
+        msg: `${err}: 유저 정보 업데이트 오류입니다..`,
       };
     }
   }
