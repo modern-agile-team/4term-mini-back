@@ -13,8 +13,10 @@ const process = {
     }
   },
 
-  createPost: async (req, res) => {
+  // createPost: async (req, res) => {
+  createPost: async (req, res, next) => {
     try {
+      console.log(req.files);
       const post = new Post(req);
       const response = await post.addPost();
 
