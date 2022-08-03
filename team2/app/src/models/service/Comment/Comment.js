@@ -1,5 +1,6 @@
 "use strict";
 const CommentStorage = require("./CommentStorage");
+const PostStorage = require("../Post/PostStorage");
 
 class Comment {
   constructor(req) {
@@ -54,6 +55,7 @@ class Comment {
 
   async getComments() {
     try {
+      //포스트 번호 확인 코드 추가
       const commentsInfo = await CommentStorage.readComments(
         this.params.postNo
       );
