@@ -14,9 +14,8 @@ const process = {
   },
 
   // createPost: async (req, res) => {
-  createPost: async (req, res, next) => {
+  createPost: async (req, res) => {
     try {
-      console.log(req.files);
       const post = new Post(req);
       const response = await post.addPost();
 

@@ -39,7 +39,9 @@ class PostStorage {
           index + 1
         });`;
       });
+      console.log(query);
       const response = await db.query(query);
+      console.log(response[0]);
 
       return response[0];
     } catch (err) {

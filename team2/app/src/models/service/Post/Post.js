@@ -7,6 +7,7 @@ class Post {
     this.params = req.params;
     this.body = req.body;
     this.query = req.query;
+    this.files = req.files;
   }
 
   async readAllPosts() {
@@ -25,7 +26,7 @@ class Post {
 
   async addPost() {
     try {
-      if (this.body.images.length === 0) {
+      if (this.files.length === 0) {
         return { success: false, msg: "이미지를 추가해 주세요" };
       }
       const { affectedRows, insertId } = await PostStorage.addNewPost(
@@ -34,12 +35,13 @@ class Post {
 
       if (insertId && affectedRows) {
         try {
-          const addImageResult = await PostStorage.addImages(
-            this.body.images,
-            insertId
-          );
+          const images = this.files.reduce((images, fileInfo) => {
+            images.push(fileInfo.location);
+            return images;
+          }, []);
+          const addImageResult = await PostStorage.addImages(images, insertId);
 
-          if (this.body.images.length === 1) {
+          if (this.files.length === 1) {
             return addImageResult.affectedRows
               ? { success: true, msg: "게시물이 추가되었습니다." }
               : { success: false, msg: "이미지 업로드를 실패했습니다" };

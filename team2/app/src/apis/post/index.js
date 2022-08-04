@@ -2,12 +2,10 @@
 
 const express = require("express");
 const router = express.Router();
-// const multer = require("multer");
-
 const postCtrl = require("./post.Ctrl");
+const { uploadPostImages } = require("../../models/service/Aws/Aws");
 
-// router.post("/", multer().array("images", 9), postCtrl.process.createPost);
-router.post("/", postCtrl.process.createPost);
+router.post("/", uploadPostImages.array("images", 9), postCtrl.process.createPost);
 router.patch("/", postCtrl.process.updatePost);
 router.get("/", postCtrl.process.readAllPosts); //전체 게시물 가져오기
 
