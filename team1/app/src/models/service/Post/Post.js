@@ -90,7 +90,7 @@ class Post {
     try {
       const params = this.params;
       const userMainPost = await PostStorage.userMainPost(params);
-      console.log(userMainPost);
+
       if (userMainPost.length === 0) {
         return { success: false, msg: err.msg };
       }
