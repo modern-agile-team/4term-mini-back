@@ -25,16 +25,16 @@ const process = {
     }
   },
 
-  // createImage: async (req, res) => {
-  //   try {
-  //     const post = new Posts(req);
-  //     const response = await post.createImage(req);
+  createImage: async (req, res) => {
+    try {
+      const post = new Posts(req);
+      const response = await post.createImage(req);
 
-  //     return res.status(201).json(response);
-  //   } catch (err) {
-  //     throw res.status(500).json(err);
-  //   }
-  // },
+      return res.status(201).json(response);
+    } catch (err) {
+      throw res.status(500).json(err);
+    }
+  },
 
   // updatePost: async (req, res) => {
   //   try {
