@@ -6,11 +6,11 @@ const postCtrl = require("./post.Ctrl");
 const router = express.Router();
 // router.get("/", postCtrl.output.home);
 
-//게시글 생성
-router.post("/moae/post/", postCtrl.process.createPost);
+// //게시글 생성
+// router.post("/moae/post/", postCtrl.process.createPost);
 
-// //게시글 수정
-// router.patch("/moae/post", postCtrl.process.updatePost);
+//게시글 수정
+router.patch("/moae/post", postCtrl.process.updatePost);
 
 // //게시글 삭제
 // router.delete("/moae/post/:postNo", postCtrl.process.deletePost);

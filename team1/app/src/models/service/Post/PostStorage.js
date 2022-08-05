@@ -36,41 +36,41 @@ class postStorage {
   //   }
   // }
 
-  static async createPost({ user_no, content }) {
-    try {
-      const query = `insert into posts(user_no, content) values(?, ?)`;
-      const response = await db.query(query, [user_no, content]);
-      return response;
-    } catch (err) {
-      throw {
-        msg: `${err} : 게시글 생성 오류입니다, 서버 개발자에게 문의해주세요`,
-      };
-    }
-  }
-
-  static async createImage(post_no, image_url, order_no) {
-    try {
-      const query = `insert into images(post_no, image_url, order_no) values(?, ?, ?);`;
-      const response = await db.query(query, [post_no, image_url, order_no]);
-      return response;
-    } catch (err) {
-      throw {
-        msg: `${err} : 이미지 생성 오류입니다, 서버 개발자에게 문의해주세요`,
-      };
-    }
-  }
-
-  // static async updatePost({ no, content }) {
+  // static async createPost({ user_no, content }) {
   //   try {
-  //     const query = `update posts set content = ? where no = ?;`;
-  //     const response = await db.query(query, [content, no]);
+  //     const query = `insert into posts(user_no, content) values(?, ?)`;
+  //     const response = await db.query(query, [user_no, content]);
   //     return response;
   //   } catch (err) {
   //     throw {
-  //       msg: `${err} : 게시글 수정 오류입니다, 서버 개발자에게 문의해주세요`,
+  //       msg: `${err} : 게시글 생성 오류입니다, 서버 개발자에게 문의해주세요`,
   //     };
   //   }
   // }
+
+  // static async createImage(post_no, image_url, order_no) {
+  //   try {
+  //     const query = `insert into images(post_no, image_url, order_no) values(?, ?, ?);`;
+  //     const response = await db.query(query, [post_no, image_url, order_no]);
+  //     return response;
+  //   } catch (err) {
+  //     throw {
+  //       msg: `${err} : 이미지 생성 오류입니다, 서버 개발자에게 문의해주세요`,
+  //     };
+  //   }
+  // }
+
+  static async updatePost({ no, content }) {
+    try {
+      const query = `update posts set content = ? where no = ?;`;
+      const response = await db.query(query, [content, no]);
+      return response;
+    } catch (err) {
+      throw {
+        msg: `${err} : 게시글 수정 오류입니다, 서버 개발자에게 문의해주세요`,
+      };
+    }
+  }
 
   // static async deletePost({ postNo }) {
   //   try {

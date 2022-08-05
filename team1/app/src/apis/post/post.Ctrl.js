@@ -14,38 +14,38 @@ const output = {
 };
 
 const process = {
-  createPost: async (req, res) => {
+  //   createPost: async (req, res) => {
+  //     try {
+  //       const post = new Posts(req);
+  //       const response = await post.createPost(req);
+
+  //       return res.status(200).json(response);
+  //     } catch (err) {
+  //       throw res.status(500).json(err);
+  //     }
+  //   },
+
+  //   createImage: async (req, res) => {
+  //     try {
+  //       const post = new Posts(req);
+  //       const response = await post.createImage(req);
+
+  //       return res.status(201).json(response);
+  //     } catch (err) {
+  //       throw res.status(500).json(err);
+  //     }
+  //   },
+
+  updatePost: async (req, res) => {
     try {
       const post = new Posts(req);
-      const response = await post.createPost(req);
-
-      return res.status(200).json(response);
-    } catch (err) {
-      throw res.status(500).json(err);
-    }
-  },
-
-  createImage: async (req, res) => {
-    try {
-      const post = new Posts(req);
-      const response = await post.createImage(req);
+      const response = await post.updatePost(req);
 
       return res.status(201).json(response);
     } catch (err) {
       throw res.status(500).json(err);
     }
   },
-
-  // updatePost: async (req, res) => {
-  //   try {
-  //     const post = new Posts(req);
-  //     const response = await post.updatePost(req);
-
-  //     return res.status(201).json(response);
-  //   } catch (err) {
-  //     throw res.status(500).json(err);
-  //   }
-  // },
 
   // deletePost: async (req, res) => {
   //   try {
