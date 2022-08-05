@@ -56,35 +56,35 @@ class Post {
   //   }
   // }
 
-  async deletePost() {
-    try {
-      const params = this.params;
-      const deletePost = await PostStorage.deletePost(params);
-      if (!deletePost[0].affectedRows) {
-        return { success: false, msg: "게시글 삭제 오류" };
-      }
-
-      return { success: true, msg: "게시물이 삭제되었습니다." };
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  // async findOneByPost() {
+  // async deletePost() {
   //   try {
   //     const params = this.params;
-
-  //     const findOneByPost = await PostStorage.findOneByPost(params.postNo);
-  //     if (findOneByPost.length === 0) {
-  //       return { success: false, msg: "존재하지 않는 게시글입니다" };
+  //     const deletePost = await PostStorage.deletePost(params);
+  //     if (!deletePost[0].affectedRows) {
+  //       return { success: false, msg: "게시글 삭제 오류" };
   //     }
-  //     findOneByPost[0].images = findOneByPost[0].images.split(",");
 
-  //     return findOneByPost[0];
+  //     return { success: true, msg: "게시물이 삭제되었습니다." };
   //   } catch (err) {
-  //     throw { success: false, msg: err.msg };
+  //     throw err;
   //   }
   // }
+
+  async findOneByPost() {
+    try {
+      const params = this.params;
+
+      const findOneByPost = await PostStorage.findOneByPost(params.postNo);
+      if (findOneByPost.length === 0) {
+        return { success: false, msg: "존재하지 않는 게시글입니다" };
+      }
+      findOneByPost[0].images = findOneByPost[0].images.split(",");
+
+      return findOneByPost[0];
+    } catch (err) {
+      throw { success: false, msg: err.msg };
+    }
+  }
 
   // async userMainPost() {
   //   try {

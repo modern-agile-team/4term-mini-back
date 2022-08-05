@@ -3,38 +3,38 @@ const { param } = require("../../../apis/board");
 const db = require("../../../apis/config/mariadb");
 
 class postStorage {
-  static async findAllByPosts() {
-    try {
-      const query = `
-      		select posts.no,posts.user_no, GROUP_CONCAT(images.image_url) AS images, posts.content, posts.updated_date, users.nickname
-      		from posts
-      		LEFT JOIN users
-      		on users.no = posts.user_no
-        	LEFT JOIN images
-        	ON images.post_no = posts.no
-      		GROUP BY posts.no;`;
-      const posts = await db.query(query);
-      return posts[0];
-    } catch (err) {
-      throw { success: false, msg: err };
-    }
-  }
-
-  // static async findOneByPost(postNo) {
+  // static async findAllByPosts() {
   //   try {
   //     const query = `
-  //     		select posts.content, group_concat(images.image_url) AS images, IF(posts.updated_date IS NOT NULL, posts.updated_date, posts.created_date) AS date from posts
-  //     		LEFT JOIN images
-  //     		ON images.post_no = posts.no
-  //     		where posts.no = ?
-  //     		group by posts.no;`;
-  //     const posts = await db.query(query, [postNo]);
-
+  //     		select posts.no,posts.user_no, GROUP_CONCAT(images.image_url) AS images, posts.content, posts.updated_date, users.nickname
+  //     		from posts
+  //     		LEFT JOIN users
+  //     		on users.no = posts.user_no
+  //       	LEFT JOIN images
+  //       	ON images.post_no = posts.no
+  //     		GROUP BY posts.no;`;
+  //     const posts = await db.query(query);
   //     return posts[0];
   //   } catch (err) {
   //     throw { success: false, msg: err };
   //   }
   // }
+
+  static async findOneByPost(postNo) {
+    try {
+      const query = `
+      		select posts.content, group_concat(images.image_url) AS images, IF(posts.updated_date IS NOT NULL, posts.updated_date, posts.created_date) AS date from posts
+      		LEFT JOIN images
+      		ON images.post_no = posts.no
+      		where posts.no = ?
+      		group by posts.no;`;
+      const posts = await db.query(query, [postNo]);
+
+      return posts[0];
+    } catch (err) {
+      throw { success: false, msg: err };
+    }
+  }
 
   // static async createPost({ user_no, content }) {
   //   try {

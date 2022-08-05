@@ -15,11 +15,11 @@ const router = express.Router();
 // //게시글 삭제
 // router.delete("/moae/post/:postNo", postCtrl.process.deletePost);
 
-//게시글 전체 불러오기
-router.get("/moae/post", postCtrl.process.findAllByPosts);
+// //게시글 전체 불러오기
+// router.get("/moae/post", postCtrl.process.findAllByPosts);
 
-// //게시글 상세 조회
-// router.get("/moae/post/:postNo", postCtrl.process.findOneByPost);
+//게시글 상세 조회
+router.get("/moae/post/:postNo", postCtrl.process.findOneByPost);
 
 // //게시글 썸네일
 // router.get("/moae/post/profile/:userNo", postCtrl.process.userMainPost);
