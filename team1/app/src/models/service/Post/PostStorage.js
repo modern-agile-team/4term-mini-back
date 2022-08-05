@@ -60,29 +60,29 @@ class postStorage {
   //   }
   // }
 
-  static async updatePost({ no, content }) {
-    try {
-      const query = `update posts set content = ? where no = ?;`;
-      const response = await db.query(query, [content, no]);
-      return response;
-    } catch (err) {
-      throw {
-        msg: `${err} : 게시글 수정 오류입니다, 서버 개발자에게 문의해주세요`,
-      };
-    }
-  }
-
-  // static async deletePost({ postNo }) {
+  // static async updatePost({ no, content }) {
   //   try {
-  //     const query = `delete from posts where no = ? `;
-  //     const response = await db.query(query, [postNo]);
+  //     const query = `update posts set content = ? where no = ?;`;
+  //     const response = await db.query(query, [content, no]);
   //     return response;
   //   } catch (err) {
   //     throw {
-  //       msg: `${err} : 게시글 삭제 오류입니다, 서버 개발자에게 문의해주세요`,
+  //       msg: `${err} : 게시글 수정 오류입니다, 서버 개발자에게 문의해주세요`,
   //     };
   //   }
   // }
+
+  static async deletePost({ postNo }) {
+    try {
+      const query = `delete from posts where no = ? `;
+      const response = await db.query(query, [postNo]);
+      return response;
+    } catch (err) {
+      throw {
+        msg: `${err} : 게시글 삭제 오류입니다, 서버 개발자에게 문의해주세요`,
+      };
+    }
+  }
 
   // static async userMainPost({ userNo }) {
   //   try {

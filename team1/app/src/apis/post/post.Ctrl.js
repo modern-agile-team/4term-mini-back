@@ -36,27 +36,27 @@ const process = {
   //     }
   //   },
 
-  updatePost: async (req, res) => {
-    try {
-      const post = new Posts(req);
-      const response = await post.updatePost(req);
-
-      return res.status(201).json(response);
-    } catch (err) {
-      throw res.status(500).json(err);
-    }
-  },
-
-  // deletePost: async (req, res) => {
+  // updatePost: async (req, res) => {
   //   try {
   //     const post = new Posts(req);
-  //     const response = await post.deletePost(req);
+  //     const response = await post.updatePost(req);
 
   //     return res.status(201).json(response);
   //   } catch (err) {
   //     throw res.status(500).json(err);
   //   }
   // },
+
+  deletePost: async (req, res) => {
+    try {
+      const post = new Posts(req);
+      const response = await post.deletePost(req);
+
+      return res.status(201).json(response);
+    } catch (err) {
+      throw res.status(500).json(err);
+    }
+  },
 
   // findAllByPosts: async (req, res) => {
   //   try {

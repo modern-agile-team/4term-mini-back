@@ -44,31 +44,31 @@ class Post {
   //   }
   // }
 
-  async updatePost() {
-    try {
-      const body = this.body;
-      const updatePost = await PostStorage.updatePost(body);
-      if (!updatePost[0].affectedRows) return { success: false, msg: "게시글 수정 오류" };
-
-      return { success: true, msg: "게시물이 수정되었습니다." };
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  // async deletePost() {
+  // async updatePost() {
   //   try {
-  //     const params = this.params;
-  //     const deletePost = await PostStorage.deletePost(params);
-  //     if (!deletePost[0].affectedRows) {
-  //       return { success: false, msg: "게시글 삭제 오류" };
-  //     }
+  //     const body = this.body;
+  //     const updatePost = await PostStorage.updatePost(body);
+  //     if (!updatePost[0].affectedRows) return { success: false, msg: "게시글 수정 오류" };
 
-  //     return { success: true, msg: "게시물이 삭제되었습니다." };
+  //     return { success: true, msg: "게시물이 수정되었습니다." };
   //   } catch (err) {
   //     throw err;
   //   }
   // }
+
+  async deletePost() {
+    try {
+      const params = this.params;
+      const deletePost = await PostStorage.deletePost(params);
+      if (!deletePost[0].affectedRows) {
+        return { success: false, msg: "게시글 삭제 오류" };
+      }
+
+      return { success: true, msg: "게시물이 삭제되었습니다." };
+    } catch (err) {
+      throw err;
+    }
+  }
 
   // async findOneByPost() {
   //   try {
