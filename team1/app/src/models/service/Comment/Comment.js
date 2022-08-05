@@ -21,29 +21,29 @@ class comment {
   //       throw { success: false, msg: err.msg };
   //     }
   //   }
-  async updateComment() {
-    try {
-      const body = this.body;
-      const { affectedRows } = await CommentStorage.updateComment(body);
-      if (!affectedRows) {
-        return { success: false, msg: "댓글 수정 실패" };
-      }
-
-      return { success: true, msg: "댓글이 수정되었습니다" };
-    } catch (err) {
-      throw { success: false, msg: err.msg };
-    }
-  }
-  //   async readComment() {
+  //   async updateComment() {
   //     try {
-  //       const param = this.params;
-  //       const comment = await CommentStorage.readComment(param);
-  //       if (!comment.length) return { success: false, msg: "없는 게시판입니다." };
-  //       return comment;
+  //       const body = this.body;
+  //       const { affectedRows } = await CommentStorage.updateComment(body);
+  //       if (!affectedRows) {
+  //         return { success: false, msg: "댓글 수정 실패" };
+  //       }
+
+  //       return { success: true, msg: "댓글이 수정되었습니다" };
   //     } catch (err) {
   //       throw { success: false, msg: err.msg };
   //     }
   //   }
+  async readComment() {
+    try {
+      const param = this.params;
+      const comment = await CommentStorage.readComment(param);
+      if (!comment.length) return { success: false, msg: "없는 게시판입니다." };
+      return comment;
+    } catch (err) {
+      throw { success: false, msg: err.msg };
+    }
+  }
   //   async deleteComment() {
   //     try {
   //       const param = this.params;

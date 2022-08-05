@@ -17,27 +17,27 @@ const process = {
   //     }
   //   },
 
-  updateComment: async (req, res) => {
-    try {
-      const comment = new Comments(req);
-      const response = await comment.updateComment(req);
-
-      return res.status(201).json(response);
-    } catch (err) {
-      throw res.status(500).json(err);
-    }
-  },
-
-  //   readComment: async (req, res) => {
+  //   updateComment: async (req, res) => {
   //     try {
   //       const comment = new Comments(req);
-  //       const response = await comment.readComment(req);
+  //       const response = await comment.updateComment(req);
 
-  //       return res.status(200).json(response);
+  //       return res.status(201).json(response);
   //     } catch (err) {
   //       throw res.status(500).json(err);
   //     }
   //   },
+
+  readComment: async (req, res) => {
+    try {
+      const comment = new Comments(req);
+      const response = await comment.readComment(req);
+
+      return res.status(200).json(response);
+    } catch (err) {
+      throw res.status(500).json(err);
+    }
+  },
 
   //   deleteComment: async (req, res) => {
   //     try {
