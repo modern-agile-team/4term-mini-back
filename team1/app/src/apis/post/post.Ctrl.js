@@ -47,28 +47,28 @@ const process = {
   //   }
   // },
 
-  deletePost: async (req, res) => {
-    try {
-      const post = new Posts(req);
-      const response = await post.deletePost(req);
-
-      return res.status(201).json(response);
-    } catch (err) {
-      throw res.status(500).json(err);
-    }
-  },
-
-  // findAllByPosts: async (req, res) => {
+  // deletePost: async (req, res) => {
   //   try {
   //     const post = new Posts(req);
-
-  //     const response = await post.findAllByPosts(req);
+  //     const response = await post.deletePost(req);
 
   //     return res.status(201).json(response);
   //   } catch (err) {
   //     throw res.status(500).json(err);
   //   }
   // },
+
+  findAllByPosts: async (req, res) => {
+    try {
+      const post = new Posts(req);
+
+      const response = await post.findAllByPosts(req);
+
+      return res.status(201).json(response);
+    } catch (err) {
+      throw res.status(500).json(err);
+    }
+  },
 
   // findOneByPost: async (req, res) => {
   //   try {
