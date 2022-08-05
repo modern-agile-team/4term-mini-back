@@ -70,27 +70,27 @@ const process = {
   //   }
   // },
 
-  findOneByPost: async (req, res) => {
-    try {
-      const post = new Posts(req);
-      const response = await post.findOneByPost(req);
-
-      return res.status(201).json(response);
-    } catch (err) {
-      throw res.status(500).json(err);
-    }
-  },
-
-  // userMainPost: async (req, res) => {
+  // findOneByPost: async (req, res) => {
   //   try {
   //     const post = new Posts(req);
-  //     const response = await post.userMainPost(req);
+  //     const response = await post.findOneByPost(req);
 
-  //     return res.status(200).json(response);
+  //     return res.status(201).json(response);
   //   } catch (err) {
   //     throw res.status(500).json(err);
   //   }
   // },
+
+  userMainPost: async (req, res) => {
+    try {
+      const post = new Posts(req);
+      const response = await post.userMainPost(req);
+
+      return res.status(200).json(response);
+    } catch (err) {
+      throw res.status(500).json(err);
+    }
+  },
 };
 
 module.exports = { process, output };

@@ -20,21 +20,21 @@ class postStorage {
   //   }
   // }
 
-  static async findOneByPost(postNo) {
-    try {
-      const query = `
-      		select posts.content, group_concat(images.image_url) AS images, IF(posts.updated_date IS NOT NULL, posts.updated_date, posts.created_date) AS date from posts
-      		LEFT JOIN images
-      		ON images.post_no = posts.no
-      		where posts.no = ?
-      		group by posts.no;`;
-      const posts = await db.query(query, [postNo]);
+  // static async findOneByPost(postNo) {
+  //   try {
+  //     const query = `
+  //     		select posts.content, group_concat(images.image_url) AS images, IF(posts.updated_date IS NOT NULL, posts.updated_date, posts.created_date) AS date from posts
+  //     		LEFT JOIN images
+  //     		ON images.post_no = posts.no
+  //     		where posts.no = ?
+  //     		group by posts.no;`;
+  //     const posts = await db.query(query, [postNo]);
 
-      return posts[0];
-    } catch (err) {
-      throw { success: false, msg: err };
-    }
-  }
+  //     return posts[0];
+  //   } catch (err) {
+  //     throw { success: false, msg: err };
+  //   }
+  // }
 
   // static async createPost({ user_no, content }) {
   //   try {
@@ -84,23 +84,23 @@ class postStorage {
   //   }
   // }
 
-  // static async userMainPost({ userNo }) {
-  //   try {
-  //     const query = `select posts.no AS postNo, images.image_url AS images, if(posts.updated_date IS NOT NULL, posts.updated_date, posts.created_date) AS DATE
-  //     		from posts
-  //     		LEFT JOIN images
-  //     		on images.post_no = posts.no
-  //    		WHERE posts.user_no = ?
-  //    		GROUP BY posts.no
-  //    		ORDER BY DATE DESC;`;
-  //     const userInfo = await db.query(query, [userNo]);
-  //     return userInfo[0];
-  //   } catch (err) {
-  //     throw {
-  //       msg: `${err} :게시글 썸네일 조회 오류입니다, 서버개발자에게 문의해주세요.`,
-  //     };
-  //   }
-  // }
+  static async userMainPost({ userNo }) {
+    try {
+      const query = `select posts.no AS postNo, images.image_url AS images, if(posts.updated_date IS NOT NULL, posts.updated_date, posts.created_date) AS DATE
+      		from posts
+      		LEFT JOIN images
+      		on images.post_no = posts.no
+     		WHERE posts.user_no = ?
+     		GROUP BY posts.no
+     		ORDER BY DATE DESC;`;
+      const userInfo = await db.query(query, [userNo]);
+      return userInfo[0];
+    } catch (err) {
+      throw {
+        msg: `${err} :게시글 썸네일 조회 오류입니다, 서버개발자에게 문의해주세요.`,
+      };
+    }
+  }
 }
 
 module.exports = postStorage;

@@ -70,35 +70,35 @@ class Post {
   //   }
   // }
 
-  async findOneByPost() {
-    try {
-      const params = this.params;
-
-      const findOneByPost = await PostStorage.findOneByPost(params.postNo);
-      if (findOneByPost.length === 0) {
-        return { success: false, msg: "존재하지 않는 게시글입니다" };
-      }
-      findOneByPost[0].images = findOneByPost[0].images.split(",");
-
-      return findOneByPost[0];
-    } catch (err) {
-      throw { success: false, msg: err.msg };
-    }
-  }
-
-  // async userMainPost() {
+  // async findOneByPost() {
   //   try {
   //     const params = this.params;
-  //     const userMainPost = await PostStorage.userMainPost(params);
-  //     console.log(userMainPost);
-  //     if (userMainPost.length === 0) {
-  //       return { success: false, msg: err.msg };
+
+  //     const findOneByPost = await PostStorage.findOneByPost(params.postNo);
+  //     if (findOneByPost.length === 0) {
+  //       return { success: false, msg: "존재하지 않는 게시글입니다" };
   //     }
-  //     return userMainPost;
+  //     findOneByPost[0].images = findOneByPost[0].images.split(",");
+
+  //     return findOneByPost[0];
   //   } catch (err) {
   //     throw { success: false, msg: err.msg };
   //   }
   // }
+
+  async userMainPost() {
+    try {
+      const params = this.params;
+      const userMainPost = await PostStorage.userMainPost(params);
+      console.log(userMainPost);
+      if (userMainPost.length === 0) {
+        return { success: false, msg: err.msg };
+      }
+      return userMainPost;
+    } catch (err) {
+      throw { success: false, msg: err.msg };
+    }
+  }
 }
 
 module.exports = Post;
