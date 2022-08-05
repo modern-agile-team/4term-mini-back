@@ -27,7 +27,7 @@ const process = {
   },
 
   deleteUser: async (req, res) => {
-    // 유저 정보 수정
+    // 회원 탈퇴
     const user = new User(req);
     const response = await user.deleteUser();
 

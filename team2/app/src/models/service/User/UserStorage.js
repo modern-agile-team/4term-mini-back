@@ -9,9 +9,9 @@ class UserStorage {
       const query = `SELECT no, nickname, profile_image FROM user WHERE email = ?;`;
       const matchedUser = await db.query(query, email);
       if (matchedUser[0].length === 0) {
-        return { success: false, msg: "회원이 아닙니다." };
+        return { success: false };
       }
-      return { success: true, msg: "로그인 완료", userInfo: matchedUser[0][0] };
+      return { success: true, userInfo: matchedUser[0][0] };
     } catch (err) {
       throw {
         msg: `${err}: 로그인 에러`,

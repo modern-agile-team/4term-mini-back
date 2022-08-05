@@ -5,9 +5,10 @@ const Auth = require("../Auth/Auth");
 
 class User {
   constructor(req) {
-    this.headers = req.headers;
     this.params = req.params;
     this.body = req.body;
+    this.file = req.file;
+    this.decoded = req.decoded;
   }
 
   async register() {
@@ -25,23 +26,22 @@ class User {
         if (!userInfo) {
           return { success: false, msg: "회원가입 실패" };
         }
-        return { success: true, msg: "회원가입 성공", token };
+        return { success: true, msg: "회원가입 성공", token, userExistence: false };
       }
 
       const token = await Auth.createJWT(response.userInfo); // 유저가 있다면 받은 정보로 토큰 생성
 
-      return { success: true, msg: "로그인 성공", token };
+      return { success: true, msg: "로그인 성공", token, userExistence: true };
     } catch (err) {
       throw err;
     }
   }
   async getUserInfo() {
-    const token = this.headers;
+    const decoded = this.decoded;
     const { userNo } = this.params;
 
     try {
-      const checkToken = await Auth.verifyJWT(token);
-      if (checkToken.userNo == userNo) {
+      if (decoded.userNo == userNo) {
         //요청한 유저의 토큰안에 있는 userNO와 경로 userNo를 비교하여 일치할때 삭제 가능
         const userInfo = await UserStorage.getUserInfo(userNo);
         return { success: true, userInfo: userInfo[0][0] };
@@ -57,16 +57,21 @@ class User {
 
   async updateUserInfo() {
     //유저정보 업데이트
-    const token = this.headers;
     const { userNo } = this.params;
     const client = this.body;
+    const img = this.file;
+    const decoded = this.decoded;
 
     try {
-      const checkToken = await Auth.verifyJWT(token);
-      if (checkToken.userNo == userNo) {
+      if (img.length == 0) {
+        client.profile_image = null;
+        console.log(client.profile_image);
+      } else {
+        client.profile_image = img.location;
+      }
+      if (decoded.userNo == userNo) {
         //요청한 유저의 토큰안에 있는 userNO와 경로 userNo를 비교하여 일치할때 수정 가능
         const updateUserInfo = await UserStorage.updateUserInfo(client, userNo);
-
         if (updateUserInfo[0].affectedRows) {
           return { success: true, msg: "회원정보 수정 완료" };
         }
@@ -79,12 +84,11 @@ class User {
   }
 
   async deleteUser() {
-    const token = this.headers;
+    const decoded = this.decoded;
     const { userNo } = this.params;
 
     try {
-      const checkToken = await Auth.verifyJWT(token);
-      if (checkToken.userNo == userNo) {
+      if (decoded.userNo == userNo) {
         //요청한 유저의 토큰안에 있는 userNO와 경로 userNo를 비교하여  맞을 때 삭제 가능
         const deleteUser = await UserStorage.deleteUser(userNo);
         if (deleteUser.affectedRows) {

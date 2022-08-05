@@ -13,18 +13,18 @@ class Auth {
     };
     return jwt.sign(payload, SECRET_KEY, {
       algorithm: "HS256",
-      expiresIn: "10m",
+      expiresIn: "1h",
       issuer: "modern agile",
     });
   }
-  static async verifyJWT(token) {
-    try {
-      const verifyToken = jwt.verify(token.authorization, SECRET_KEY);
-      return verifyToken;
-    } catch (err) {
-      return err;
-    }
-  }
+  // static async verifyJWT(token) {
+  //   try {
+  //     const verifyToken = jwt.verify(token.authorization, SECRET_KEY);
+  //     return verifyToken;
+  //   } catch (err) {
+  //     return err;
+  //   }
+  // }
 }
 
 module.exports = Auth;
