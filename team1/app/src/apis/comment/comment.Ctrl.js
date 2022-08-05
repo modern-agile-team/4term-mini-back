@@ -6,27 +6,27 @@ const Comments = require("../../models/services/comment/comment");
 const { connectComment } = require("../../models/services/comment/commentStorage");
 
 const process = {
-  createComment: async (req, res) => {
-    try {
-      const comment = new Comments(req);
-      const response = await comment.createComment(req);
-
-      return res.status(201).json(response);
-    } catch (err) {
-      throw res.status(500).json(err);
-    }
-  },
-
-  //   updateComment: async (req, res) => {
+  //   createComment: async (req, res) => {
   //     try {
   //       const comment = new Comments(req);
-  //       const response = await comment.updateComment(req);
+  //       const response = await comment.createComment(req);
 
   //       return res.status(201).json(response);
   //     } catch (err) {
   //       throw res.status(500).json(err);
   //     }
   //   },
+
+  updateComment: async (req, res) => {
+    try {
+      const comment = new Comments(req);
+      const response = await comment.updateComment(req);
+
+      return res.status(201).json(response);
+    } catch (err) {
+      throw res.status(500).json(err);
+    }
+  },
 
   //   readComment: async (req, res) => {
   //     try {

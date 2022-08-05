@@ -11,29 +11,29 @@ class comment {
     this.query = req.query;
   }
 
-  async createComment() {
-    try {
-      const { postNo, userNo } = this.query;
-      const { content } = this.body;
-      const comments = await CommentStorage.createComment(postNo, userNo, content);
-      return { commentNo: comments.insertId };
-    } catch (err) {
-      throw { success: false, msg: err.msg };
-    }
-  }
-  //   async updateComment() {
+  //   async createComment() {
   //     try {
-  //       const body = this.body;
-  //       const { affectedRows } = await CommentStorage.updateComment(body);
-  //       if (!affectedRows) {
-  //         return { success: false, msg: "댓글 수정 실패" };
-  //       }
-
-  //       return { success: true, msg: "댓글이 수정되었습니다" };
+  //       const { postNo, userNo } = this.query;
+  //       const { content } = this.body;
+  //       const comments = await CommentStorage.createComment(postNo, userNo, content);
+  //       return { commentNo: comments.insertId };
   //     } catch (err) {
   //       throw { success: false, msg: err.msg };
   //     }
   //   }
+  async updateComment() {
+    try {
+      const body = this.body;
+      const { affectedRows } = await CommentStorage.updateComment(body);
+      if (!affectedRows) {
+        return { success: false, msg: "댓글 수정 실패" };
+      }
+
+      return { success: true, msg: "댓글이 수정되었습니다" };
+    } catch (err) {
+      throw { success: false, msg: err.msg };
+    }
+  }
   //   async readComment() {
   //     try {
   //       const param = this.params;
