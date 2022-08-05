@@ -28,26 +28,26 @@ const process = {
   //     }
   //   },
 
-  readComment: async (req, res) => {
-    try {
-      const comment = new Comments(req);
-      const response = await comment.readComment(req);
-
-      return res.status(200).json(response);
-    } catch (err) {
-      throw res.status(500).json(err);
-    }
-  },
-
-  //   deleteComment: async (req, res) => {
+  //   readComment: async (req, res) => {
   //     try {
   //       const comment = new Comments(req);
-  //       const response = await comment.deleteComment(req);
+  //       const response = await comment.readComment(req);
 
   //       return res.status(200).json(response);
   //     } catch (err) {
   //       throw res.status(500).json(err);
   //     }
   //   },
+
+  deleteComment: async (req, res) => {
+    try {
+      const comment = new Comments(req);
+      const response = await comment.deleteComment(req);
+
+      return res.status(200).json(response);
+    } catch (err) {
+      throw res.status(500).json(err);
+    }
+  },
 };
 module.exports = { process };

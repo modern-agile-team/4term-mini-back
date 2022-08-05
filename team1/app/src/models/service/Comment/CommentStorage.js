@@ -22,28 +22,28 @@ class commentStorage {
   //       throw { msg: `${err} : 댓글 수정 오류입니다` };
   //     }
   // }
-  static async readComment({ postNo }) {
-    try {
-      const query = `SELECT comments.no, users.profile_image AS profileImage, users.nickname, comments.content, comments.created_date as DATE FROM comments
-  			LEFT JOIN users
-  			ON users.no = comments.user_no
-  			LEFT JOIN posts
-  			ON posts.no = comments.post_no
-  			where posts.no = ?;`;
-      const response = await db.query(query, [postNo]);
-      return response[0];
-    } catch (err) {
-      throw { msg: `${err} : 댓글 불러오기 오류입니다.` };
-    }
-  }
-  //   static async deleteComment({ commentNo }) {
+  //   static async readComment({ postNo }) {
   //     try {
-  //       const query = `DELETE FROM comments WHERE no = ?; `;
-  //       const response = await db.query(query, [commentNo]);
+  //       const query = `SELECT comments.no, users.profile_image AS profileImage, users.nickname, comments.content, comments.created_date as DATE FROM comments
+  //   			LEFT JOIN users
+  //   			ON users.no = comments.user_no
+  //   			LEFT JOIN posts
+  //   			ON posts.no = comments.post_no
+  //   			where posts.no = ?;`;
+  //       const response = await db.query(query, [postNo]);
   //       return response[0];
   //     } catch (err) {
-  //       throw { msg: `${err} : 댓글 삭제하기 오류입니다.` };
+  //       throw { msg: `${err} : 댓글 불러오기 오류입니다.` };
   //     }
   //   }
+  static async deleteComment({ commentNo }) {
+    try {
+      const query = `DELETE FROM comments WHERE no = ?; `;
+      const response = await db.query(query, [commentNo]);
+      return response[0];
+    } catch (err) {
+      throw { msg: `${err} : 댓글 삭제하기 오류입니다.` };
+    }
+  }
 }
 module.exports = commentStorage;

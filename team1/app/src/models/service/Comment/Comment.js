@@ -34,27 +34,27 @@ class comment {
   //       throw { success: false, msg: err.msg };
   //     }
   //   }
-  async readComment() {
-    try {
-      const param = this.params;
-      const comment = await CommentStorage.readComment(param);
-      if (!comment.length) return { success: false, msg: "없는 게시판입니다." };
-      return comment;
-    } catch (err) {
-      throw { success: false, msg: err.msg };
-    }
-  }
-  //   async deleteComment() {
+  //   async readComment() {
   //     try {
   //       const param = this.params;
-  //       const comment = await CommentStorage.deleteComment(param);
-
-  //       if (!comment.affectedRows) return { success: false, msg: "없는 댓글입니다." };
-
-  //       return { success: true, msg: "댓글이 삭제 되었습니다" };
+  //       const comment = await CommentStorage.readComment(param);
+  //       if (!comment.length) return { success: false, msg: "없는 게시판입니다." };
+  //       return comment;
   //     } catch (err) {
   //       throw { success: false, msg: err.msg };
   //     }
   //   }
+  async deleteComment() {
+    try {
+      const param = this.params;
+      const comment = await CommentStorage.deleteComment(param);
+
+      if (!comment.affectedRows) return { success: false, msg: "없는 댓글입니다." };
+
+      return { success: true, msg: "댓글이 삭제 되었습니다" };
+    } catch (err) {
+      throw { success: false, msg: err.msg };
+    }
+  }
 }
 module.exports = comment;
