@@ -15,6 +15,7 @@ class Post {
       const allPostsResult = await PostStorage.readAllPosts();
 
       return allPostsResult.reduce((allPostsInfo, postInfo) => {
+        console.log(postInfo);
         postInfo.images = postInfo.images.split(",");
         allPostsInfo.push(postInfo);
         return allPostsInfo;
