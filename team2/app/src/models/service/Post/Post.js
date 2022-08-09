@@ -49,7 +49,7 @@ class Post {
                   postNo: insertId,
                   msg: "게시물이 추가되었습니다.",
                 }
-              : { success: false, msg: "이미지 업로드를 실패했습니다" };
+              : { success: false, msg: "이미지 업로드를 실패했습니다." };
           }
           addImageResult.forEach((result) => {
             if (!result.affectedRows) {
@@ -58,9 +58,8 @@ class Post {
           });
 
           return {
-            success: true,
-            postNo: insertId,
-            msg: "게시물이 추가되었습니다.",
+            success: false,
+            msg: "게시물 업로드를 실패했습니다.",
           };
         } catch (err) {
           throw { success: false, msg: err.msg };
