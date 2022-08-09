@@ -15,7 +15,6 @@ class Post {
       const allPostsResult = await PostStorage.readAllPosts();
 
       return allPostsResult.reduce((allPostsInfo, postInfo) => {
-        console.log(postInfo);
         postInfo.images = postInfo.images.split(",");
         allPostsInfo.push(postInfo);
         return allPostsInfo;
@@ -30,6 +29,7 @@ class Post {
       if (this.files.length === 0) {
         return { success: false, msg: "이미지를 추가해 주세요" };
       }
+
       const { affectedRows, insertId } = await PostStorage.addNewPost(
         this.body
       );
@@ -44,7 +44,11 @@ class Post {
 
           if (this.files.length === 1) {
             return addImageResult.affectedRows
-              ? { success: true, msg: "게시물이 추가되었습니다." }
+              ? {
+                  success: true,
+                  postNo: insertId,
+                  msg: "게시물이 추가되었습니다.",
+                }
               : { success: false, msg: "이미지 업로드를 실패했습니다" };
           }
           addImageResult.forEach((result) => {
@@ -53,7 +57,11 @@ class Post {
             }
           });
 
-          return { success: true, msg: "게시물이 추가되었습니다." };
+          return {
+            success: true,
+            postNo: insertId,
+            msg: "게시물이 추가되었습니다.",
+          };
         } catch (err) {
           throw { success: false, msg: err.msg };
         }
