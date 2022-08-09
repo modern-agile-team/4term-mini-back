@@ -15,21 +15,18 @@ class User {
     //회원가입
     const client = this.body;
     try {
-      const response = await UserStorage.conflict(client); //유저 정보가 있는지 확인
+      const checkUser = await UserStorage.checkUser(client); //유저 email 확인
 
-      if (!response.success) {
+      if (!checkUser.success) {
         // 유저가 없다면
         const userInfo = await UserStorage.register(client); //회원가입
-        const conflict = await UserStorage.conflict(client); //유저 정보 확인
-        const token = await Auth.createJWT(conflict.userInfo); // 리턴받은 유저정보로 토큰 생성
+        client.no = userInfo; //userNo 추가
+        const token = await Auth.createJWT(client); // 리턴받은 유저정보로 토큰 생성
 
-        if (!userInfo) {
-          return { success: false, msg: "회원가입 실패" };
-        }
         return { success: true, msg: "회원가입 성공", token, userExistence: false };
       }
 
-      const token = await Auth.createJWT(response.userInfo); // 유저가 있다면 받은 정보로 토큰 생성
+      const token = await Auth.createJWT(checkUser.userInfo); // 유저가 있다면 받은 정보로 토큰 생성
 
       return { success: true, msg: "로그인 성공", token, userExistence: true };
     } catch (err) {
@@ -41,15 +38,18 @@ class User {
     const { userNo } = this.params;
 
     try {
-      if (decoded.userNo == userNo) {
-        //요청한 유저의 토큰안에 있는 userNO와 경로 userNo를 비교하여 일치할때 삭제 가능
-        const userInfo = await UserStorage.getUserInfo(userNo);
-        return { success: true, userInfo: userInfo[0][0] };
-      } else {
-        const otherUserInfo = await UserStorage.getUserInfo(userNo);
-
-        return { success: false, info: otherUserInfo[0][0] };
-      }
+      const userInfo = await UserStorage.getUserInfo(userNo);
+      // if (decoded.userNo == userNo) {
+      //   //요청한 유저의 토큰안에 있는 userNO와 경로 userNo를 비교하여 일치할때 삭제 가능
+      //   const userInfo = await UserStorage.getUserInfo(userNo);
+      //   return { success: true, userInfo: userInfo[0][0] };
+      // } else {
+      //   const otherUserInfo = await UserStorage.getUserInfo(userNo);
+      //   return { success: false, info: otherUserInfo[0][0] };
+      // }
+      return decoded.userNo == userNo
+        ? { success: true, userInfo: userInfo[0][0] }
+        : { success: false, userinfo: userInfo[0][0] };
     } catch (err) {
       throw err;
     }
@@ -63,21 +63,33 @@ class User {
     const decoded = this.decoded;
 
     try {
-      if (img.length == 0) {
-        client.profile_image = null;
-        console.log(client.profile_image);
-      } else {
-        client.profile_image = img.location;
-      }
+      // img === undefined ? (client.profile_image = null) : (client.profile_image = img.location);
+
+      // 닉네임 수정 -> 유저가 맞는지 체크, 닉네임이 중복되는지 -> 중복되면 그사람이 다른 사람인지
+      client.profile_image = !img ? null : img.location;
+      if (!client.nickname) return { success: false, msg: "닉네임은 공백이 될 수 없습니다." };
       if (decoded.userNo == userNo) {
         //요청한 유저의 토큰안에 있는 userNO와 경로 userNo를 비교하여 일치할때 수정 가능
+        const duplicatedUser = await UserStorage.duplicatedUser(client, userNo);
+        if (duplicatedUser[0][0]) {
+          return { success: false, msg: "닉네임 중복" };
+        }
         const updateUserInfo = await UserStorage.updateUserInfo(client, userNo);
         if (updateUserInfo[0].affectedRows) {
           return { success: true, msg: "회원정보 수정 완료" };
         }
-      } else {
-        return { success: false, msg: "회원정보 수정 실패" };
       }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async searchUser() {
+    const nickname = this.params;
+
+    try {
+      const searchUser = await UserStorage.searchUser(nickname);
+      return { seucess: true, user: searchUser[0] };
     } catch (err) {
       throw err;
     }

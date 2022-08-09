@@ -13,6 +13,7 @@ const check = {
         next();
       } else {
         req.decoded = jwt.verify(req.headers.authorization, SECRET_KEY);
+
         return next();
       }
     } catch (error) {

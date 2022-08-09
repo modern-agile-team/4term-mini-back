@@ -3,11 +3,12 @@
 const db = require("../../../config/database");
 
 class UserStorage {
-  static async conflict({ email }) {
+  static async checkUser({ email }) {
     //회원 중복 확인 email 사용 회원이면 바로 true 반환
     try {
       const query = `SELECT no, nickname, profile_image FROM user WHERE email = ?;`;
       const matchedUser = await db.query(query, email);
+
       if (matchedUser[0].length === 0) {
         return { success: false };
       }
@@ -22,11 +23,10 @@ class UserStorage {
   static async register(client) {
     //회원 가입 name, email, profile, gender
     try {
-      const { nickname, profile_image_url, email, gender } = client;
-      const query = `INSERT INTO user(name, email, profile_image, gender) VALUES(?, ?, ?, ?);`;
-      const test = await db.query(query, [nickname, email, profile_image_url, gender]);
-
-      return test[0].affectedRows;
+      const { name, email, gender } = client;
+      const query = `INSERT INTO user(name, email, gender) VALUES(?, ?, ?);`;
+      const test = await db.query(query, [name, email, gender]);
+      return test[0].insertId;
       // }
     } catch (err) {
       throw {
@@ -62,8 +62,36 @@ class UserStorage {
         profile_image,
         userNo,
       ]);
-
+      // const updateUserInfo = await db.query(query, [...Object.values(client), userNo]);
       return updateUserInfo;
+    } catch (err) {
+      throw {
+        msg: `${err}: 유저 정보 업데이트 오류입니다..`,
+      };
+    }
+  }
+
+  static async searchUser({ nickname }) {
+    //유저 닉네임 검색
+    try {
+      const query = `SELECT nickname, profile_image FROM user WHERE nickname LIKE "%"?"%"`;
+      const searchUser = await db.query(query, [nickname]);
+
+      return searchUser;
+    } catch (err) {
+      throw {
+        msg: `${err}: 유저 정보 업데이트 오류입니다..`,
+      };
+    }
+  }
+
+  static async duplicatedUser({ nickname }, userNo) {
+    //중복 유저 닉네임 검색
+    try {
+      const query = `SELECT nickname, no FROM user WHERE nickname = ? AND no != ?`;
+      const duplicatedUser = await db.query(query, [nickname, userNo]);
+
+      return duplicatedUser;
     } catch (err) {
       throw {
         msg: `${err}: 유저 정보 업데이트 오류입니다..`,
