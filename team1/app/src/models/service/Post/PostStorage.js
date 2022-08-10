@@ -13,6 +13,7 @@ class postStorage {
         	ON images.post_no = posts.no
       		GROUP BY posts.no;`;
       const posts = await db.query(query);
+      // console.log(posts[0]);
       return posts[0];
     } catch (err) {
       throw { success: false };
@@ -59,10 +60,10 @@ class postStorage {
     }
   }
 
-  static async updatePost({ no, content }) {
+  static async updatePost({ userNo, content }) {
     try {
       const query = `update posts set content = ? where no = ?;`;
-      const response = await db.query(query, [content, no]);
+      const response = await db.query(query, [content, userNo]);
       return response;
     } catch (err) {
       throw {
@@ -85,13 +86,13 @@ class postStorage {
 
   static async userMainPost({ userNo }) {
     try {
-      const query = `select posts.no AS postNo, images.image_url AS images, if(posts.updated_date IS NOT NULL, posts.updated_date, posts.created_date) AS DATE 
+      const query = `select posts.no AS postNo, images.image_url AS firstimage, if(posts.updated_date IS NOT NULL, posts.updated_date, posts.created_date) AS date 
       		from posts
       		LEFT JOIN images
       		on images.post_no = posts.no
      		WHERE posts.user_no = ?
      		GROUP BY posts.no
-     		ORDER BY DATE DESC;`;
+     		ORDER BY date DESC;`;
       const userInfo = await db.query(query, [userNo]);
       return userInfo[0];
     } catch (err) {

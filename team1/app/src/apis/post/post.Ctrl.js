@@ -1,6 +1,6 @@
 "use strict";
 
-const Posts = require("../../models/services/Post/Post");
+const Posts = require("../../models/service/Post/Post");
 
 const output = {
   home: (req, res) => {
@@ -12,6 +12,7 @@ const output = {
 const process = {
   createPost: async (req, res) => {
     try {
+      console.log("dasfklsadasfjk");
       const post = new Posts(req);
       const response = await post.createPost(req);
 
@@ -35,7 +36,7 @@ const process = {
   updatePost: async (req, res) => {
     try {
       const post = new Posts(req);
-      const response = await post.updatePost(req);
+      const response = await post.updatePost();
 
       return res.status(201).json(response);
     } catch (err) {

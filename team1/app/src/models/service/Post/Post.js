@@ -48,8 +48,10 @@ class Post {
 
   async updatePost() {
     try {
-      const body = this.body;
-      const updatePost = await PostStorage.updatePost(body);
+      const param = this.params;
+      const content = this.body;
+
+      const updatePost = await PostStorage.updatePost(param, content);
       if (!updatePost[0].affectedRows) return { success: false, msg: "게시글 수정 오류" };
 
       return { success: true, msg: "게시물이 수정되었습니다." };
