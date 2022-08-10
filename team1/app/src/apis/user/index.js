@@ -3,10 +3,10 @@
 const express = require("express"),
     router = express.Router(),
     userCtrl = require("./user.Ctrl"),
-    identityCheck = require("../../../middleware/login-auth").checkIdxToken;
+    identityCheck = require("../../middlewares/login-auth").checkIdxToken;
 
 // s3
-const S3 = require("../../../middleware/s3"),
+const S3 = require("../../middlewares/s3"),
     s3 = new S3(),
     upload = s3.upload.single("profileImg");
 

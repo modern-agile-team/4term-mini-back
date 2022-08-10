@@ -1,12 +1,10 @@
 "use strict";
 
 const UserStorage = require("./userStorage"),
-    Jwt = require("../Auth/auth"),
-    checkToken = require("../../../../middleware/login-auth").checkUserToken,
-    S3 = require("../../../../middleware/s3");
+    Jwt = require("../Auth/Auth"),
+    checkToken = require("../../../middlewares/login-auth").checkUserToken;
 
 const jwt = new Jwt();
-const s3 = new S3();
 
 class User {
     constructor(req) {

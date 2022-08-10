@@ -1,6 +1,6 @@
 "use strict";
 
-const db = require("../../../config/mysql");
+const db = require("../../../config/database");
 
 class UserStorage {
     static async getUserbyNo(no) {

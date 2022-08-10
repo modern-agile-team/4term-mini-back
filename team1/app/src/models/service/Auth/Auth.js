@@ -8,7 +8,7 @@ class Auth {
             const payload = {
                 no: user.no,
                 nickname: user.nickname,
-                profile: user.profile_image,
+                profile: user.profileImg,
             };
 
             return jwt.sign(payload, process.env.SECRET_KEY, {
@@ -28,15 +28,6 @@ class Auth {
             decoded = jwt.verify(token, process.env.SECRET_KEY);
 
             return decoded;
-        } catch (err) {
-            throw err;
-        }
-    };
-
-    upload = () => {
-        try {
-            console.log(1);
-            return 1;
         } catch (err) {
             throw err;
         }
