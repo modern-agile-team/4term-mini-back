@@ -7,28 +7,43 @@ class Comment {
     this.params = req.params;
     this.body = req.body;
     this.query = req.query;
+    this.decoded = req.decoded;
   }
+
+  response = {
+    userNoError: { success: false, msg: "유저 정보 불일치" },
+    notFoundError: { success: false, msg: "존재하지 않는 댓글입니다." },
+    contentNullError: {
+      success: false,
+      msg: "댓글 내용을 추가해 주세요.",
+    },
+  };
 
   async addComment() {
     try {
+      if (this.decoded.userNo !== this.query.userNo) {
+        return this.response.userNoError;
+      }
+      if (!this.body.content) {
+        return this.response.contentNullError;
+      }
+
       const response = await CommentStorage.addComment(
         this.query.postNo,
         this.query.userNo,
         this.body.content
       );
 
-      if (response.affectedRows === 1) {
-        return {
-          success: true,
-          commentNo: response.insertId,
-          msg: "댓글이 작성되었습니다",
-        };
-      } else {
-        return {
-          success: false,
-          msg: "댓글이 작성되지 않았습니다",
-        };
-      }
+      return response.affectedRows === 1
+        ? {
+            success: true,
+            commentNo: response.insertId,
+            msg: "댓글이 작성되었습니다",
+          }
+        : {
+            success: false,
+            msg: "댓글이 작성되지 않았습니다",
+          };
     } catch (err) {
       throw { success: false, msg: err.msg };
     }
@@ -36,18 +51,21 @@ class Comment {
 
   async updateComment() {
     try {
-      const response = await CommentStorage.updateComment(this.body);
-      if (response.affectedRows === 1) {
-        return {
-          success: true,
-          msg: "댓글이 수정되었습니다",
-        };
-      } else {
-        return {
-          success: false,
-          msg: "댓글이 수정되지 않았습니다",
-        };
+      if (this.decoded.userNo !== this.params.userNo) {
+        return this.response.userNoError;
       }
+      const commentExistence = await CommentStorage.readOneComment(this.body);
+      if (commentExistence.length === 0) {
+        return this.response.notFoundError;
+      }
+      const response = await CommentStorage.updateComment(this.body);
+
+      return response.affectedRows === 1
+        ? { success: true, msg: "댓글이 수정되었습니다." }
+        : {
+            success: false,
+            msg: "댓글이 수정되지 않았습니다.",
+          };
     } catch (err) {
       throw { success: false, msg: err.msg };
     }
@@ -55,7 +73,7 @@ class Comment {
 
   async getComments() {
     try {
-      //포스트 번호 확인 코드 추가
+      //포스트 확인 코드 추가
       const commentsInfo = await CommentStorage.readComments(
         this.params.postNo
       );
@@ -68,18 +86,21 @@ class Comment {
 
   async deleteComment() {
     try {
-      const response = await CommentStorage.removeComment(this.params);
-      if (response.affectedRows === 1) {
-        return {
-          success: true,
-          msg: "댓글이 삭제되었습니다",
-        };
-      } else {
-        return {
-          success: false,
-          msg: "댓글이 삭제되지 않았습니다",
-        };
+      if (this.decoded.userNo !== this.query.userNo) {
+        return this.response.userNoError;
       }
+      const commentExistence = await CommentStorage.readOneComment(this.query);
+      if (commentExistence.length === 0) {
+        return this.response.notFoundError;
+      }
+
+      const response = await CommentStorage.removeComment(this.query);
+      return response.affectedRows === 1
+        ? { success: true, msg: "댓글이 삭제되었습니다." }
+        : {
+            success: false,
+            msg: "댓글이 삭제되지 않았습니다.",
+          };
     } catch (err) {
       throw { success: false, msg: err.msg };
     }
