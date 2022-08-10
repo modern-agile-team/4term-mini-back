@@ -64,7 +64,7 @@ const authUtil = {
                 logger.error("유효하지 않은 토큰");
                 return { success: false, msg: `INVALID_TOKEN : 유효하지 않은 토큰` };
             }
-            return { success: true, msg: `로그인 성공`, userExistence: true };
+            return { success: true, msg: `로그인 성공`, userno: user.no, userExistence: true };
         } catch (err) {
             throw err;
         }

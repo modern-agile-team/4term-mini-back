@@ -28,7 +28,7 @@ class S3 {
         }),
     });
 
-    imgDelete = (req, res, next) => {
+    delete = (req, res, next) => {
         s3.deleteObject(
             {
                 Bucket: "modernagile",

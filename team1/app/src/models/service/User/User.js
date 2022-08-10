@@ -24,10 +24,9 @@ class User {
             const data = await UserStorage.getUserbyNickname(params.nickname);
             console.log(data);
 
-            if (!data) {
-                return { success: false, msg: "유저 정보가 없습니다" };
-            }
-            return { success: true, msg: `회원검색 성공` };
+            return !data
+                ? { success: false, msg: "유저 정보가 없습니다" }
+                : { success: true, msg: `회원검색 성공` };
         } catch (err) {
             throw err;
         }
@@ -39,26 +38,20 @@ class User {
 
         try {
             const userData = await UserStorage.getUserbyEmail(client.email);
-            console.log(userData);
 
             if (!token.length) {
                 // 토큰 없을 시
                 if (userData) {
-                    // DB에 데이터 없을 시
-                    return userData.email === client.email
-                        ? {
-                              success: true,
-                              msg: "로그인 성공",
-                              token: jwt.newToken(userData),
-                              userExistence: true,
-                          }
-                        : {
-                              success: false,
-                              msg: "로그인 실패 : email불일치",
-                          };
+                    // DB에 정보 있을 시
+                    return {
+                        success: true,
+                        msg: "로그인 성공",
+                        token: jwt.newToken(userData),
+                        userExistence: true,
+                    };
                 }
-                return { success: true, msg: "최초 회원가입으로 이동", userExistence: false };
-                // DB에 데이터 있을 시 -> 회원가입 :)
+                return { success: false, msg: "최초 회원가입으로 이동", userExistence: false };
+                // DB에 데이터 없을 시
             }
             return checkToken(token);
             // 토큰 있을 시
@@ -80,11 +73,10 @@ class User {
             }
 
             client.profile_image = image;
-            console.log(client);
 
             const data = await UserStorage.saveUser(client);
             if (!data) {
-                return { success: false, msg: "회원가입 실패" };
+                return { success: false, msg: "회원가입 실패 : storage Error" };
             }
 
             const dataForToken = await UserStorage.getUserbyEmail(client.email),
@@ -93,6 +85,7 @@ class User {
             return {
                 success: true,
                 msg: `회원가입 성공`,
+                userno: dataForToken.no,
                 token: newToken,
             };
         } catch (err) {
@@ -110,10 +103,9 @@ class User {
             if (tokenData.no === Number(params.userNo)) {
                 const data = await UserStorage.delUser(params.userNo);
 
-                if (data) {
-                    return { success: true, msg: `회원탈퇴 성공` };
-                }
-                return { success: false, msg: "회원탈퇴 실패" };
+                return data
+                    ? { success: true, msg: `회원탈퇴 성공` }
+                    : { success: false, msg: "회원탈퇴 실패" };
             }
         } catch (err) {
             throw err;
@@ -123,21 +115,21 @@ class User {
     async updateUser() {
         const client = this.body,
             params = this.params,
-            token = this.headers.token;
-
+            token = this.headers.token,
+            image = this.file.location;
         try {
             const tokenData = jwt.verifyToken(token);
 
             if (tokenData.no === Number(params.userNo)) {
+                client.profile_image = image;
+
                 const values = [...Object.values(client), params.userNo],
                     updateData = await UserStorage.updateUser(values);
-
                 if (!updateData) {
                     return { success: false, msg: "정보가 잘못됬습니다" };
                 }
                 const userData = await UserStorage.getUserbyNo(params.userNo),
                     newToken = jwt.newToken(userData);
-                console.log(userData);
 
                 return {
                     success: true,
@@ -150,47 +142,21 @@ class User {
         }
     }
 
-    async test_updateUser() {
-        // const client = this.body,
-        //     params = this.params;
-        // try {
-        //     const profile = await UserStorage.getUserbyNo(params.userNo);
-        //     for (const el in profile) {
-        //         client[el] === profile[el] ? delete client[el] : "";
-        //     }
-        //     if (!Object.keys(client).length)
-        //         return { success: false, msg: "수정된 정보가 없습니다" };
-        //     const values = [...Object.values(client), Number(params.userNo)],
-        //         queryKeys = Object.keys(client).reduce((acc, cur, idx, arr) => {
-        //             return idx === arr.length - 1 ? acc + cur + "=?" : acc + cur + "=?,";
-        //         }, "");
-        //     const data = await UserStorage.test_updateUser(queryKeys, values);
-        //     if (!data) {
-        //         return { success: false, msg: "정보가 잘못됬습니다" };
-        //     }
-        //     return {
-        //         success: true,
-        //         msg: `${client.nickname}의 정보수정 성공`,
-        //     };
-        // } catch (err) {
-        //     throw err;
-        // }
-    }
-
-    //------------------------------------------image--------------------------------------------------
-
-    async imageTest() {
-        // const params = this.params;
-        const image = this.file;
+    async nicknameCheck() {
+        const params = this.params,
+            token = this.headers.token,
+            nickname = this.req.nickname;
 
         try {
-            console.log("image : ", image);
-            const data = await UserStorage.imageTest_postsTable(image);
+            const dataCheck = await UserStorage.getUserbyNo(params.userNo);
+            const tokenData = jwt.verifyToken(token);
 
-            if (data) {
-                return { success: true, msg: `이미지 성공`, data: data };
+            if (dataCheck.nickname === nickname) {
+                if (nickname === tokenData.nickname) {
+                    return this.updateUser();
+                }
+                return { success: false, msg: "nickname 중복" };
             }
-            return { success: false, msg: "이미지 실패", data: data };
         } catch (err) {
             throw err;
         }

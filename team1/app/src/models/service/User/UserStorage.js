@@ -59,17 +59,6 @@ class UserStorage {
         }
     }
 
-    static async test_updateUser(queryKeys, values) {
-        try {
-            const query = `UPDATE users SET ${queryKeys} WHERE users.no = ?;`;
-            const data = await db.query(query, values);
-
-            return data[0].affectedRows;
-        } catch (err) {
-            throw err;
-        }
-    }
-
     static async updateUser(values) {
         try {
             const query = `UPDATE users SET nickname=?, name=?, website=?,
@@ -79,30 +68,6 @@ class UserStorage {
             const data = await db.query(query, values);
 
             return data[0].affectedRows;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    static async imageTest_postsTable(data) {
-        try {
-            console.log(Object.values(data));
-            const insertQuery = `INSERT INTO posts(user_no)
-                     VALUES(?);`;
-
-            return await db.query(insertQuery, Object.values(data));
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    static async imageTest_imagesTable(data) {
-        try {
-            console.log(Object.values(data));
-            const insertQuery = `INSERT INTO images(post_no,images_url,order_no)
-                     VALUES(?,?,?);`;
-
-            return await db.query(insertQuery, Object.values(data));
         } catch (err) {
             throw err;
         }
