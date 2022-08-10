@@ -5,9 +5,6 @@ const router = express.Router();
 const commentCtrl = require("./comment.Ctrl");
 const checkToken = require("../../middlewares/identify-auth");
 
-// router.post("/", commentCtrl.process.createComment);
-// router.delete("/", commentCtrl.process.deleteComment);
-
 router.post("/", checkToken.check.token, commentCtrl.process.createComment);
 router.patch(
   "/:userNo",
