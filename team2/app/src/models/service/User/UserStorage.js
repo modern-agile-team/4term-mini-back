@@ -23,9 +23,9 @@ class UserStorage {
   static async register(client) {
     //회원 가입 name, email, profile, gender
     try {
-      const { name, email, gender } = client;
+      const { nickname, email, gender } = client;
       const query = `INSERT INTO user(name, email, gender) VALUES(?, ?, ?);`;
-      const test = await db.query(query, [name, email, gender]);
+      const test = await db.query(query, [nickname, email, gender]);
       return test[0].insertId;
       // }
     } catch (err) {
@@ -74,13 +74,13 @@ class UserStorage {
   static async searchUser({ nickname }) {
     //유저 닉네임 검색
     try {
-      const query = `SELECT nickname, profile_image FROM user WHERE nickname LIKE "%"?"%"`;
+      const query = `SELECT no, nickname, profile_image FROM user WHERE nickname LIKE "%"?"%"`;
       const searchUser = await db.query(query, [nickname]);
 
       return searchUser;
     } catch (err) {
       throw {
-        msg: `${err}: 유저 정보 업데이트 오류입니다..`,
+        msg: `${err}: 유저 검색 오류입니다..`,
       };
     }
   }

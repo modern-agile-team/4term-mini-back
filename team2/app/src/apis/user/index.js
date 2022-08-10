@@ -7,7 +7,7 @@ const { upload, deleteProfile } = require("../../models/service/Aws/Aws");
 const userCtrl = require("./user.Ctrl");
 const checkToken = require("../../middlewares/identify-auth");
 
-router.post("/register", userCtrl.process.register); // 회원가입
+router.post("/login", userCtrl.process.register); // 회원가입
 router.get("/profile/:userNo", checkToken.check.token, userCtrl.process.getUserInfo); //유저 정보 전체 조회
 router.get("/search/:nickname", userCtrl.process.searchUser); // 유저 정보 일부 조회
 router.patch(

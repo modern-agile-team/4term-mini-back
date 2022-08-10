@@ -48,8 +48,8 @@ class User {
       //   return { success: false, info: otherUserInfo[0][0] };
       // }
       return decoded.userNo == userNo
-        ? { success: true, userInfo: userInfo[0][0] }
-        : { success: false, userinfo: userInfo[0][0] };
+        ? { success: true, userInfo: userInfo[0][0], user: true } // true면 본인
+        : { success: true, userinfo: userInfo[0][0], user: false };
     } catch (err) {
       throw err;
     }
@@ -89,7 +89,10 @@ class User {
 
     try {
       const searchUser = await UserStorage.searchUser(nickname);
-      return { seucess: true, user: searchUser[0] };
+      if (searchUser) {
+        return { seucess: true, user: searchUser[0] };
+      }
+      return { success: false, msg: "유저 검색 오류입니다." };
     } catch (err) {
       throw err;
     }
