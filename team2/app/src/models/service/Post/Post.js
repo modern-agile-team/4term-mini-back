@@ -7,7 +7,14 @@ class Post {
     this.params = req.params;
     this.body = req.body;
     this.query = req.query;
+    this.files = req.files;
+    this.decoded = req.decoded;
   }
+
+  response = {
+    userNoError: { success: false, msg: "유저 정보 불일치" },
+    postNotFoundError: { success: false, msg: "존재하지 않는 포스트입니다." },
+  };
 
   async readAllPosts() {
     try {
@@ -25,41 +32,44 @@ class Post {
 
   async addPost() {
     try {
-      if (this.body.images.length === 0) {
+      if (this.decoded.userNo != this.body.userNo) {
+        return this.response.userNoError;
+      }
+      if (this.files.length === 0) {
         return { success: false, msg: "이미지를 추가해 주세요" };
       }
       const { affectedRows, insertId } = await PostStorage.addNewPost(
         this.body
       );
-
       if (insertId && affectedRows) {
         try {
-          const addImageResult = await PostStorage.addImages(
-            this.body.images,
-            insertId
-          );
+          const images = this.files.reduce((images, fileInfo) => {
+            images.push(fileInfo.location);
+            return images;
+          }, []);
+          const addImageResult = await PostStorage.addImages(images, insertId);
 
-          if (this.body.images.length === 1) {
+          if (this.files.length === 1) {
             return addImageResult.affectedRows
-              ? { success: true, msg: "게시물이 추가되었습니다." }
-              : { success: false, msg: "이미지 업로드를 실패했습니다" };
+              ? {
+                  success: true,
+                  postNo: insertId,
+                  msg: "게시물이 추가되었습니다.",
+                }
+              : { success: false, msg: "이미지 업로드를 실패했습니다." };
           }
           addImageResult.forEach((result) => {
             if (!result.affectedRows) {
               return { success: false, msg: "이미지 업로드를 실패했습니다." };
             }
           });
-
-          return { success: true, msg: "게시물이 추가되었습니다." };
         } catch (err) {
           throw { success: false, msg: err.msg };
         }
       }
-
       return {
-        success: true,
-        postNo: insertId,
-        msg: "게시글이 성공적으로 작성되었습니다.",
+        success: false,
+        msg: "게시물 업로드를 실패했습니다.",
       };
     } catch (err) {
       throw { success: false, msg: err.msg };
@@ -68,6 +78,13 @@ class Post {
 
   async updatePost() {
     try {
+      if (this.decoded.userNo != this.params.userNo) {
+        return this.response.userNoError;
+      }
+      const postExistence = await PostStorage.getOnePost(this.body.postNo);
+      if (postExistence.length === 0) {
+        return this.response.postNotFoundError;
+      }
       const updateResult = await PostStorage.updatePost(this.body);
 
       return updateResult.affectedRows
@@ -82,7 +99,7 @@ class Post {
     try {
       let particularPost = await PostStorage.getOnePost(this.params.postNo);
       if (particularPost.length === 0) {
-        return { success: false, msg: "존재하지 않는 post입니다." };
+        return this.response.postNotFoundError;
       }
       particularPost[0].images = particularPost[0].images.split(",");
 
@@ -94,7 +111,15 @@ class Post {
 
   async deletePost() {
     try {
-      const deleteResult = await PostStorage.deletePost(this.params.postNo);
+      if (this.decoded.userNo != this.query.userNo) {
+        return this.response.userNoError;
+      }
+      const postExistence = await PostStorage.getOnePost(this.query.postNo);
+      if (postExistence.length === 0) {
+        return this.response.postNotFoundError;
+      }
+
+      const deleteResult = await PostStorage.deletePost(this.query.postNo);
 
       return deleteResult.affectedRows
         ? { success: true, msg: "게시물이 삭제되었습니다." }

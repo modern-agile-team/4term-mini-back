@@ -1,12 +1,15 @@
 "use strict";
 
+const AWS = require("aws-sdk");
 const Post = require("../../models/service/Post/Post");
+const { deletePostImages } = require("../../models/service/Aws/Aws");
 
-const process = {
+const hc = {
   readAllPosts: async (req, res) => {
     try {
       const post = new Post(req);
       const response = await post.readAllPosts();
+      console.log(response);
       return res.status(200).json(response);
     } catch (err) {
       throw res.status(500).json(err);
@@ -47,7 +50,10 @@ const process = {
   deletePost: async (req, res) => {
     try {
       const post = new Post(req);
+      const { images } = await post.readOnePost();
+      deletePostImages(images);
       const response = await post.deletePost();
+
       return res.status(200).json(response);
     } catch (err) {
       throw res.status(500).json(err);
@@ -66,5 +72,5 @@ const process = {
 };
 
 module.exports = {
-  process,
+  hc,
 };
