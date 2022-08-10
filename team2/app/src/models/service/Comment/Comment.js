@@ -21,7 +21,7 @@ class Comment {
 
   async addComment() {
     try {
-      if (this.decoded.userNo !== this.query.userNo) {
+      if (this.decoded.userNo != this.query.userNo) {
         return this.response.userNoError;
       }
       if (!this.body.content) {
@@ -51,7 +51,7 @@ class Comment {
 
   async updateComment() {
     try {
-      if (this.decoded.userNo !== this.params.userNo) {
+      if (this.decoded.userNo != this.params.userNo) {
         return this.response.userNoError;
       }
       const commentExistence = await CommentStorage.readOneComment(this.body);
@@ -73,7 +73,14 @@ class Comment {
 
   async getComments() {
     try {
-      //포스트 확인 코드 추가
+      const postExistence = await PostStorage.getOnePost(this.params.postNo);
+      if (postExistence.length === 0) {
+        return {
+          success: false,
+          msg: "존재하지 않는 포스트입니다",
+        };
+      }
+
       const commentsInfo = await CommentStorage.readComments(
         this.params.postNo
       );
@@ -86,7 +93,7 @@ class Comment {
 
   async deleteComment() {
     try {
-      if (this.decoded.userNo !== this.query.userNo) {
+      if (this.decoded.userNo != this.query.userNo) {
         return this.response.userNoError;
       }
       const commentExistence = await CommentStorage.readOneComment(this.query);
