@@ -3,11 +3,11 @@
 const db = require("../../../config/database");
 
 class UserStorage {
-  static async checkUser({ email }) {
+  static async checkUser({ account_email }) {
     //회원 중복 확인 email 사용 회원이면 바로 true 반환
     try {
-      const query = `SELECT no, nickname, profile_image FROM user WHERE email = ?;`;
-      const matchedUser = await db.query(query, email);
+      const query = `SELECT no, nickname, profile_image FROM users WHERE email = ?;`;
+      const matchedUser = await db.query(query, account_email);
 
       if (matchedUser[0].length === 0) {
         return { success: false };
@@ -23,9 +23,9 @@ class UserStorage {
   static async register(client) {
     //회원 가입 name, email, profile, gender
     try {
-      const { nickname, email, gender } = client;
-      const query = `INSERT INTO user(name, email, gender) VALUES(?, ?, ?);`;
-      const test = await db.query(query, [nickname, email, gender]);
+      const { nickname, account_email, gender } = client;
+      const query = `INSERT INTO users(name, email, gender) VALUES(?, ?, ?);`;
+      const test = await db.query(query, [nickname, account_email, gender]);
       return test[0].insertId;
       // }
     } catch (err) {
@@ -37,7 +37,7 @@ class UserStorage {
 
   static async getUserInfo(userNo) {
     try {
-      const query = `SELECT * FROM user WHERE no = ?`;
+      const query = `SELECT * FROM users WHERE no = ?`;
       const userInfo = await db.query(query, userNo);
 
       return userInfo;
@@ -52,7 +52,7 @@ class UserStorage {
     //유저정보 업데이트
     try {
       const { nickname, name, website, phone, gender, profile_image } = client;
-      const query = `UPDATE user SET nickname = ?, name = ?, website = ?, phone = ?, gender = ?, profile_image = ? where no = ?;`;
+      const query = `UPDATE users SET nickname = ?, name = ?, website = ?, phone = ?, gender = ?, profile_image = ? where no = ?;`;
       const updateUserInfo = await db.query(query, [
         nickname,
         name,
@@ -74,7 +74,7 @@ class UserStorage {
   static async searchUser({ nickname }) {
     //유저 닉네임 검색
     try {
-      const query = `SELECT no, nickname, profile_image FROM user WHERE nickname LIKE "%"?"%"`;
+      const query = `SELECT no, nickname, profile_image FROM users WHERE nickname LIKE "%"?"%"`;
       const searchUser = await db.query(query, [nickname]);
 
       return searchUser;
@@ -88,7 +88,7 @@ class UserStorage {
   static async duplicatedUser({ nickname }, userNo) {
     //중복 유저 닉네임 검색
     try {
-      const query = `SELECT nickname, no FROM user WHERE nickname = ? AND no != ?`;
+      const query = `SELECT nickname, no FROM users WHERE nickname = ? AND no != ?`;
       const duplicatedUser = await db.query(query, [nickname, userNo]);
 
       return duplicatedUser;
@@ -102,7 +102,7 @@ class UserStorage {
   static async deleteUser(userNo) {
     //회원 탈퇴
     try {
-      const query = `DELETE FROM user WHERE no = ?;`;
+      const query = `DELETE FROM users WHERE no = ?;`;
       const deleteUser = await db.query(query, userNo);
       return deleteUser[0];
     } catch (err) {

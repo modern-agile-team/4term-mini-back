@@ -49,8 +49,7 @@ class PostStorage {
 
   static async updatePost({ postNo, content }) {
     try {
-      const qurey =
-        "UPDATE posts SET content = ?, updated_date = NOW() WHERE no = ?;";
+      const qurey = "UPDATE posts SET content = ?, updated_date = NOW() WHERE no = ?;";
       const response = await db.query(qurey, [content, postNo]);
 
       return response[0];
@@ -77,6 +76,7 @@ class PostStorage {
 
   static async deletePost(postNo) {
     try {
+      console.log(":Hello");
       const query = "DELETE FROM posts WHERE no =?;";
       const response = await db.query(query, postNo);
 

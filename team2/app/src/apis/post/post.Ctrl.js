@@ -50,6 +50,7 @@ const hc = {
   deletePost: async (req, res) => {
     try {
       const post = new Post(req);
+      req.params.postNo = req.query.postNo;
       const { images } = await post.readOnePost();
       deletePostImages(images);
       const response = await post.deletePost();

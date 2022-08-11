@@ -38,38 +38,36 @@ class Post {
       if (this.files.length === 0) {
         return { success: false, msg: "이미지를 추가해 주세요" };
       }
-      const { affectedRows, insertId } = await PostStorage.addNewPost(
-        this.body
-      );
+      const { affectedRows, insertId } = await PostStorage.addNewPost(this.body);
       if (insertId && affectedRows) {
-        try {
-          const images = this.files.reduce((images, fileInfo) => {
-            images.push(fileInfo.location);
-            return images;
-          }, []);
-          const addImageResult = await PostStorage.addImages(images, insertId);
-
-          if (this.files.length === 1) {
-            return addImageResult.affectedRows
-              ? {
-                  success: true,
-                  postNo: insertId,
-                  msg: "게시물이 추가되었습니다.",
-                }
-              : { success: false, msg: "이미지 업로드를 실패했습니다." };
-          }
-          addImageResult.forEach((result) => {
-            if (!result.affectedRows) {
-              return { success: false, msg: "이미지 업로드를 실패했습니다." };
-            }
-          });
-        } catch (err) {
-          throw { success: false, msg: err.msg };
+        const images = this.files.reduce((images, fileInfo) => {
+          images.push(fileInfo.location);
+          return images;
+        }, []);
+        const addImageResult = await PostStorage.addImages(images, insertId);
+        console.log(addImageResult);
+        if (this.files.length === 1) {
+          return addImageResult.affectedRows
+            ? {
+                success: true,
+                postNo: insertId,
+                msg: "게시물이 추가되었습니다.",
+              }
+            : { success: false, msg: "이미지 업로드를 실패했습니다." };
         }
+        addImageResult.forEach((result) => {
+          if (!result.affectedRows) {
+            return { success: false, msg: "이미지 업로드를 실패했습니다." };
+          }
+        });
+        return {
+          success: true,
+          msg: "게시물 업로드를 성공했습니다.",
+        };
       }
       return {
         success: false,
-        msg: "게시물 업로드를 실패했습니다.",
+        msg: "게시물 업로드를 실패했습니다",
       };
     } catch (err) {
       throw { success: false, msg: err.msg };
@@ -81,7 +79,9 @@ class Post {
       if (this.decoded.userNo != this.params.userNo) {
         return this.response.userNoError;
       }
+      console.log(this.body);
       const postExistence = await PostStorage.getOnePost(this.body.postNo);
+      console.log(postExistence);
       if (postExistence.length === 0) {
         return this.response.postNotFoundError;
       }
@@ -131,9 +131,7 @@ class Post {
 
   async readProfilePosts() {
     try {
-      const profilePostInfo = await PostStorage.getProfilePosts(
-        this.params.userNo
-      );
+      const profilePostInfo = await PostStorage.getProfilePosts(this.params.userNo);
 
       return profilePostInfo;
     } catch (err) {
