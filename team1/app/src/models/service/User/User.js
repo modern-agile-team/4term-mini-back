@@ -1,8 +1,8 @@
 "use strict";
 
 const UserStorage = require("./userStorage"),
-    Jwt = require("../Auth/Auth"),
-    checkToken = require("../../../middlewares/login-auth").checkUserToken;
+    Jwt = require("../Auth/auth"),
+    checkToken = require("../../../../middleware/login-auth").checkUserToken;
 
 const jwt = new Jwt();
 
@@ -20,11 +20,10 @@ class User {
 
         try {
             const data = await UserStorage.getUserbyNickname(params.nickname);
-            console.log(data);
 
             return !data
                 ? { success: false, msg: "유저 정보가 없습니다" }
-                : { success: true, msg: `회원검색 성공` };
+                : { success: true, msg: `회원검색 성공`, data: data };
         } catch (err) {
             throw err;
         }
@@ -39,16 +38,18 @@ class User {
 
             if (!token.length) {
                 // 토큰 없을 시
-                if (userData) {
-                    // DB에 정보 있을 시
-                    return {
-                        success: true,
-                        msg: "로그인 성공",
-                        token: jwt.newToken(userData),
-                        userExistence: true,
-                    };
-                }
-                return { success: false, msg: "최초 회원가입으로 이동", userExistence: false };
+                return userData
+                    ? {
+                          success: true,
+                          msg: "로그인 성공",
+                          token: jwt.newToken(userData),
+                          userExistence: true,
+                      }
+                    : {
+                          success: false,
+                          msg: "최초 회원가입으로 이동",
+                          userExistence: false,
+                      };
                 // DB에 데이터 없을 시
             }
             return checkToken(token);
@@ -63,7 +64,8 @@ class User {
         const image = this.file.location;
 
         try {
-            const nicknameCheck = (await UserStorage.getUserbyEmail(client.email)) || "";
+            const nicknameCheck =
+                (await UserStorage.getUserbyEmail(client.email)) || "";
 
             // 닉네임 중복체크
             if (nicknameCheck.nickname === client.nickname) {
@@ -72,19 +74,17 @@ class User {
 
             client.profile_image = image;
 
-            const data = await UserStorage.saveUser(client);
-            if (!data) {
+            const newUser = await UserStorage.saveUser(client);
+            if (newUser) {
                 return { success: false, msg: "회원가입 실패 : storage Error" };
             }
-
-            const dataForToken = await UserStorage.getUserbyEmail(client.email),
-                newToken = jwt.newToken(dataForToken);
+            const data = await UserStorage.getUserbyEmail(client.email);
 
             return {
                 success: true,
                 msg: `회원가입 성공`,
-                userno: dataForToken.no,
-                token: newToken,
+                userno: data.no,
+                token: jwt.newToken(userData),
             };
         } catch (err) {
             throw err;
@@ -115,6 +115,7 @@ class User {
             params = this.params,
             token = this.headers.token,
             image = this.file.location;
+
         try {
             const tokenData = jwt.verifyToken(token);
 
@@ -123,16 +124,16 @@ class User {
 
                 const values = [...Object.values(client), params.userNo],
                     updateData = await UserStorage.updateUser(values);
+
                 if (!updateData) {
                     return { success: false, msg: "정보가 잘못됬습니다" };
                 }
-                const userData = await UserStorage.getUserbyNo(params.userNo),
-                    newToken = jwt.newToken(userData);
+                const userData = await UserStorage.getUserbyNo(params.userNo);
 
                 return {
                     success: true,
                     msg: `${client.nickname}의 정보수정 성공`,
-                    token: newToken,
+                    token: jwt.newToken(userData),
                 };
             }
         } catch (err) {
