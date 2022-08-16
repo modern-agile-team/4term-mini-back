@@ -23,12 +23,23 @@ class User {
         client.no = userInfo; //userNo 추가
         const token = await Auth.createJWT(client); // 리턴받은 유저정보로 토큰 생성
 
-        return { success: true, msg: "회원가입 성공", token, userExistence: false };
+        return {
+          success: true,
+          msg: "회원가입 성공",
+          token,
+          userExistence: false,
+          userNo: client.no,
+        };
       }
-
       const token = await Auth.createJWT(checkUser.userInfo); // 유저가 있다면 받은 정보로 토큰 생성
 
-      return { success: true, msg: "로그인 성공", token, userExistence: true };
+      return {
+        success: true,
+        msg: "로그인 성공",
+        token,
+        userExistence: true,
+        userNo: checkUser.userInfo.no,
+      };
     } catch (err) {
       throw err;
     }
