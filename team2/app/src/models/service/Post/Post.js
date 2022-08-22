@@ -32,6 +32,7 @@ class Post {
 
   async addPost() {
     try {
+      console.log(this.files);
       console.log(this.body);
       console.log("------");
       console.log(this.body.files);
