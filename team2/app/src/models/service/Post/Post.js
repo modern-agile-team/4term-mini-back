@@ -35,8 +35,8 @@ class Post {
       if (this.decoded.userNo != this.body.userNo) {
         return this.response.userNoError;
       }
+      console.log(this.body.files);
       if (this.files.length === 0) {
-        console.log(this);
         return { success: false, msg: "이미지를 추가해 주세요" };
       }
       const { affectedRows, insertId } = await PostStorage.addNewPost(this.body);
