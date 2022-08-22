@@ -32,6 +32,7 @@ class Post {
 
   async addPost() {
     try {
+      console.log(req);
       if (this.decoded.userNo != this.body.userNo) {
         return this.response.userNoError;
       }
