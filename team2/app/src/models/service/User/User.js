@@ -76,7 +76,10 @@ class User {
     try {
       // img === undefined ? (client.profile_image = null) : (client.profile_image = img.location);
       console.log("유저정보 업데이트");
-      console.log(userNo);
+      console.log(this);
+      console.log(decoded.userNo);
+      console.log(decoded.userNo == userNo);
+
       // 닉네임 수정 -> 유저가 맞는지 체크, 닉네임이 중복되는지 -> 중복되면 그사람이 다른 사람인지
       client.profile_image = !img ? null : img.location;
       if (!client.nickname) return { success: false, msg: "닉네임은 공백이 될 수 없습니다." };
