@@ -37,7 +37,7 @@ class UserStorage {
 
   static async getUserInfo(userNo) {
     try {
-      const query = `SELECT * FROM users WHERE no = ?`;
+      const query = `SELECT nickname, name, website, description, email, phone, gender, profile_image FROM users WHERE no = ?`;
       const userInfo = await db.query(query, userNo);
 
       return userInfo;
