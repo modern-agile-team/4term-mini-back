@@ -37,7 +37,6 @@ class User {
         msg: "로그인 성공",
         token,
         userExistence: true,
-        userNo: checkUser.userInfo.no,
       };
     } catch (err) {
       throw err;
