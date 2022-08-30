@@ -94,7 +94,7 @@ class UserStorage {
       return duplicatedUser;
     } catch (err) {
       throw {
-        msg: `${err}: 유저 정보 업데이트 오류입니다..`,
+        msg: `${err}: 유저 닉네임 중복입니다..`,
       };
     }
   }
