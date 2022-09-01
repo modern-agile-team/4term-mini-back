@@ -51,12 +51,13 @@ class UserStorage {
   static async updateUserInfo(client, userNo) {
     //유저정보 업데이트
     try {
-      const { nickname, name, website, phone, gender, profile_image } = client;
-      const query = `UPDATE users SET nickname = ?, name = ?, website = ?, phone = ?, gender = ?, profile_image = ? where no = ?;`;
+      const { nickname, name, website, description, phone, gender, profile_image } = client;
+      const query = `UPDATE users SET nickname = ?, name = ?, website = ?,discription = ?, phone = ?, gender = ?, profile_image = ? where no = ?;`;
       const updateUserInfo = await db.query(query, [
         nickname,
         name,
         website,
+        description,
         phone,
         gender,
         profile_image,
