@@ -15,7 +15,7 @@ const upload = multer({
     s3,
     bucket: process.env.AWS_BUCKET_NAME,
     contentType: multerS3.AUTO_CONTENT_TYPE,
-    acl: "public-read",
+    acl: "public-read-write",
     key: (req, file, cb) => {
       cb(null, `profile/userNo${req.params.userNo}.jpg`);
     },
@@ -28,10 +28,10 @@ const postStorage = multerS3({
   contentType: multerS3.AUTO_CONTENT_TYPE,
   acl: "public-read",
 
-  metadata: function (req, file, cb) {
+  metadata: function (file, cb) {
     cb(null, { fieldName: file.fieldname });
   },
-  key: function (req, file, cb) {
+  key: function (file, cb) {
     cb(null, `posts/${file.originalname}`);
   },
 });
@@ -52,10 +52,23 @@ function deletePostImages(images) {
     if (!err) console.log(data);
   });
 }
+
 const deleteProfile = async (req, res, next) => {
   //삭제
   const { userNo } = req.params;
-  await s3.deleteObject({ bucket: process.env.AWS_BUCKET_NAME, key: `userNo${userNo}` });
+  s3.deleteObject(
+    {
+      Bucket: process.env.AWS_BUCKET_NAME, // 사용자 버켓 이름
+      Key: `profile/userNo${userNo}.jpg`, // 버켓 내 경로
+    },
+    (err, data) => {
+      if (err) {
+        console.log(data);
+        throw err;
+      }
+    }
+  );
+
   next();
 };
 

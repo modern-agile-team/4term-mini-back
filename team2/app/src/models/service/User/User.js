@@ -75,7 +75,6 @@ class User {
       // img === undefined ? (client.profile_image = null) : (client.profile_image = img.location);
       // 닉네임 수정 -> 유저가 맞는지 체크, 닉네임이 중복되는지 -> 중복되면 그사람이 다른 사람인지
       client.profile_image = !img ? null : img.location;
-
       if (!client.nickname) return { success: false, msg: "닉네임은 공백이 될 수 없습니다." };
       if (decoded.userNo == userNo) {
         //요청한 유저의 토큰안에 있는 userNO와 경로 userNo를 비교하여 일치할때 수정 가능
