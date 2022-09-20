@@ -14,12 +14,15 @@ class User {
   async register() {
     //회원가입
     const client = this.body;
+
     try {
       const checkUser = await UserStorage.checkUser(client); //유저 email 확인
 
       if (!checkUser.success) {
         // 유저가 없다면
+
         const userInfo = await UserStorage.register(client); //회원가입
+
         client.no = userInfo; //userNo 추가
         const token = await Auth.createJWT(client); // 리턴받은 유저정보로 토큰 생성
 
@@ -61,6 +64,21 @@ class User {
         : { success: true, userinfo: userInfo[0][0], user: false };
     } catch (err) {
       throw err;
+    }
+  }
+
+  async getUserProfileImg() {
+    const { userNo } = this.params;
+    try {
+      const userProfile = await UserStorage.getUserProfileImg(userNo);
+
+      return !userProfile[0][0].profile_image
+        ? { isProfileImg: false }
+        : { isProfileImg: true, profileImg: userProfile[0][0].profile_image };
+    } catch (err) {
+      throw {
+        msg: `${err} 유저 정보를 찾을 수 없습니다. (User)`,
+      };
     }
   }
 
