@@ -35,7 +35,7 @@ class PostStorage {
     try {
       let query = "";
       images.forEach((imageUrl, index) => {
-        query += `INSERT INTO images(image_url,post_no,order_no) VALUES(${imageUrl},${postNo},${
+        query += `INSERT INTO images(image_url,post_no,order_no) VALUES("${imageUrl}",${postNo},${
           index + 1
         });`;
       });
@@ -76,7 +76,6 @@ class PostStorage {
 
   static async deletePost(postNo) {
     try {
-      console.log(":Hello");
       const query = "DELETE FROM posts WHERE no =?;";
       const response = await db.query(query, postNo);
 

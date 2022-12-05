@@ -32,8 +32,6 @@ class Post {
 
   async addPost() {
     try {
-      console.log(this.files);
-      console.log(this.decoded);
       if (this.decoded.userNo != this.body.userNo) {
         return this.response.userNoError;
       }

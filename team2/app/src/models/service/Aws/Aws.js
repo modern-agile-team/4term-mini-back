@@ -32,8 +32,6 @@ const postStorage = multerS3({
     cb(null, { fieldName: file.fieldname });
   },
   key: function (req, file, cb) {
-    console.log(file);
-
     cb(null, `posts/${file.originalname}`);
   },
 });
@@ -57,7 +55,6 @@ function deletePostImages(images) {
 
 const deleteProfile = async (req, res, next) => {
   //삭제
-  console.log("deleteProfile", req.data);
   const { userNo } = req.params;
   s3.deleteObject(
     {
@@ -66,7 +63,6 @@ const deleteProfile = async (req, res, next) => {
     },
     (err, data) => {
       if (err) {
-        console.log(data);
         throw err;
       }
     }
