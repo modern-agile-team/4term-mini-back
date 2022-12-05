@@ -21,7 +21,7 @@ class Post {
       const allPostsResult = await PostStorage.readAllPosts();
 
       return allPostsResult.reduce((allPostsInfo, postInfo) => {
-        postInfo.images = postInfo.images.split(",");
+        postInfo.images = postInfo.images?.split(",");
         allPostsInfo.push(postInfo);
         return allPostsInfo;
       }, []);
@@ -32,8 +32,6 @@ class Post {
 
   async addPost() {
     try {
-      console.log(this.files);
-      console.log(this.decoded);
       if (this.decoded.userNo != this.body.userNo) {
         return this.response.userNoError;
       }

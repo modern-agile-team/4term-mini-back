@@ -9,7 +9,6 @@ const hc = {
     try {
       const post = new Post(req);
       const response = await post.readAllPosts();
-      console.log(response);
       return res.status(200).json(response);
     } catch (err) {
       throw res.status(500).json(err);
