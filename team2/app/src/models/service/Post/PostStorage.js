@@ -22,7 +22,7 @@ class PostStorage {
 
   static async addNewPost({ userNo, content }) {
     try {
-      const query = `INSERT INTO posts(user_no, content) VALUES(${userNo}, "${content}");`;
+      const query = `INSERT INTO posts(user_no, content) VALUES(${userNo}, ${content});`;
       const response = await db.query(query);
 
       return response[0];
@@ -35,7 +35,7 @@ class PostStorage {
     try {
       let query = "";
       images.forEach((imageUrl, index) => {
-        query += `INSERT INTO images(image_url,post_no,order_no) VALUES("${imageUrl}",${postNo},${
+        query += `INSERT INTO images(image_url,post_no,order_no) VALUES(${imageUrl},${postNo},${
           index + 1
         });`;
       });
