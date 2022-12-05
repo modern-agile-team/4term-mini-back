@@ -28,6 +28,7 @@ const process = {
 
   updateUserInfo: async (req, res) => {
     // 유저 정보 수정
+
     const user = new User(req);
     const response = await user.updateUserInfo();
 

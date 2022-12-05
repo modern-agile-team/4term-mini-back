@@ -55,6 +55,7 @@ function deletePostImages(images) {
 
 const deleteProfile = async (req, res, next) => {
   //삭제
+  console.log("deleteProfile", req.data);
   const { userNo } = req.params;
   s3.deleteObject(
     {

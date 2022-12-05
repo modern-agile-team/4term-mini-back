@@ -32,6 +32,7 @@ class Post {
 
   async addPost() {
     try {
+      console.log(this.body);
       if (this.decoded.userNo != this.body.userNo) {
         return this.response.userNoError;
       }
@@ -40,34 +41,34 @@ class Post {
       }
       const { affectedRows, insertId } = await PostStorage.addNewPost(this.body);
       if (insertId && affectedRows) {
-        const images = this.files.reduce((images, fileInfo) => {
-          images.push(fileInfo.location);
-          return images;
-        }, []);
-        const addImageResult = await PostStorage.addImages(images, insertId);
-        console.log(addImageResult);
-        if (this.files.length === 1) {
-          return addImageResult.affectedRows
-            ? {
-                success: true,
-                postNo: insertId,
-                msg: "게시물이 추가되었습니다.",
-              }
-            : { success: false, msg: "이미지 업로드를 실패했습니다." };
-        }
-        addImageResult.forEach((result) => {
-          if (!result.affectedRows) {
-            return { success: false, msg: "이미지 업로드를 실패했습니다." };
+        try {
+          const images = this.files.reduce((images, fileInfo) => {
+            images.push(fileInfo.location);
+            return images;
+          }, []);
+          const addImageResult = await PostStorage.addImages(images, insertId);
+
+          if (this.files.length === 1) {
+            return addImageResult.affectedRows
+              ? {
+                  success: true,
+                  postNo: insertId,
+                  msg: "게시물이 추가되었습니다.",
+                }
+              : { success: false, msg: "이미지 업로드를 실패했습니다." };
           }
-        });
-        return {
-          success: true,
-          msg: "게시물 업로드를 성공했습니다.",
-        };
+          addImageResult.forEach((result) => {
+            if (!result.affectedRows) {
+              return { success: false, msg: "이미지 업로드를 실패했습니다." };
+            }
+          });
+        } catch (err) {
+          throw { success: false, msg: err.msg };
+        }
       }
       return {
         success: false,
-        msg: "게시물 업로드를 실패했습니다",
+        msg: "게시물 업로드를 실패했습니다.",
       };
     } catch (err) {
       throw { success: false, msg: err.msg };
