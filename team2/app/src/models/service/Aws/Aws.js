@@ -28,10 +28,12 @@ const postStorage = multerS3({
   contentType: multerS3.AUTO_CONTENT_TYPE,
   acl: "public-read",
 
-  metadata: function (file, cb) {
+  metadata: function (req, file, cb) {
     cb(null, { fieldName: file.fieldname });
   },
-  key: function (file, cb) {
+  key: function (req, file, cb) {
+    console.log(file);
+
     cb(null, `posts/${file.originalname}`);
   },
 });
