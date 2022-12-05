@@ -5,8 +5,8 @@ const process = {
   register: async (req, res) => {
     //회원가입, 로그인
     const user = new User(req);
-    const response = await user.register();
 
+    const response = await user.register();
     return res.json(response);
   },
 
@@ -14,6 +14,14 @@ const process = {
     // 유저정보 전체조회
     const user = new User(req);
     const response = await user.getUserInfo();
+
+    return res.json(response);
+  },
+
+  getUserProfileImg: async (req, res) => {
+    // 유저정보 전체조회
+    const user = new User(req);
+    const response = await user.getUserProfileImg();
 
     return res.json(response);
   },

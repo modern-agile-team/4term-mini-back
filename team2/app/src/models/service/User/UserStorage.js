@@ -22,6 +22,7 @@ class UserStorage {
 
   static async register(client) {
     //회원 가입 name, email, profile, gender
+
     try {
       const { nickname, account_email, gender } = client;
       const query = `INSERT INTO users(name, email, gender) VALUES(?, ?, ?);`;
@@ -44,6 +45,19 @@ class UserStorage {
     } catch (err) {
       throw {
         msg: `${err}: 유저 정보를 찾을 수 없습니다.`,
+      };
+    }
+  }
+
+  static async getUserProfileImg(userNo) {
+    try {
+      const query = `SELECT profile_image FROM users WHERE no = ?`;
+      const userProfileImg = await db.query(query, userNo);
+
+      return userProfileImg;
+    } catch (err) {
+      throw {
+        msg: `${err}: 유저 정보를 찾을 수 없습니다. (storage)`,
       };
     }
   }

@@ -10,6 +10,7 @@ const checkToken = require("../../middlewares/identify-auth");
 router.use(express.urlencoded({ extended: true }));
 router.post("/login", userCtrl.process.register); // 회원가입
 router.get("/profile/:userNo", checkToken.check.token, userCtrl.process.getUserInfo); //유저 정보 전체 조회
+router.get("/profileImg/:userNo", userCtrl.process.getUserProfileImg);
 router.get("/search/:nickname", userCtrl.process.searchUser); // 유저 정보 일부 조회
 router.post(
   "/profile/:userNo",
