@@ -22,7 +22,7 @@ class PostStorage {
 
   static async addNewPost({ userNo, content }) {
     try {
-      const query = `INSERT INTO posts(user_no, content) VALUES(${userNo}, "${content}");`;
+      const query = `INSERT INTO posts(user_no, content) VALUES(${userNo}, ${content});`;
       const response = await db.query(query);
 
       return response[0];
@@ -76,7 +76,6 @@ class PostStorage {
 
   static async deletePost(postNo) {
     try {
-      console.log(":Hello");
       const query = "DELETE FROM posts WHERE no =?;";
       const response = await db.query(query, postNo);
 

@@ -21,7 +21,7 @@ class Post {
       const allPostsResult = await PostStorage.readAllPosts();
 
       return allPostsResult.reduce((allPostsInfo, postInfo) => {
-        postInfo.images = postInfo.images.split(",");
+        postInfo.images = postInfo.images?.split(",");
         allPostsInfo.push(postInfo);
         return allPostsInfo;
       }, []);
@@ -45,7 +45,7 @@ class Post {
           return images;
         }, []);
         const addImageResult = await PostStorage.addImages(images, insertId);
-        console.log(addImageResult);
+
         if (this.files.length === 1) {
           return addImageResult.affectedRows
             ? {
@@ -60,14 +60,10 @@ class Post {
             return { success: false, msg: "이미지 업로드를 실패했습니다." };
           }
         });
-        return {
-          success: true,
-          msg: "게시물 업로드를 성공했습니다.",
-        };
       }
       return {
-        success: false,
-        msg: "게시물 업로드를 실패했습니다",
+        success: true,
+        msg: "게시물이 추가되었습니다.",
       };
     } catch (err) {
       throw { success: false, msg: err.msg };
@@ -79,9 +75,7 @@ class Post {
       if (this.decoded.userNo != this.params.userNo) {
         return this.response.userNoError;
       }
-      console.log(this.body);
       const postExistence = await PostStorage.getOnePost(this.body.postNo);
-      console.log(postExistence);
       if (postExistence.length === 0) {
         return this.response.postNotFoundError;
       }

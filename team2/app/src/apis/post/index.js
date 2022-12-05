@@ -13,7 +13,7 @@ router.post(
   postCtrl.hc.createPost
 );
 router.patch("/:userNo", checkToken.check.token, postCtrl.hc.updatePost);
-router.get("/all/", postCtrl.hc.readAllPosts);
+router.get("/all", postCtrl.hc.readAllPosts);
 
 router.get("/:postNo", postCtrl.hc.readPost);
 router.delete("/", checkToken.check.token, postCtrl.hc.deletePost);
